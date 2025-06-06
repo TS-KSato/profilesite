@@ -1,0 +1,35 @@
+[
+    {
+        "id": 1,
+        "author": "うま恋日記",
+        "handle": "@uma_koi",
+        "avatar": "profile.png",
+        "time": "2時間前",
+        "content": "有馬記念2025 大本命発表！コントレイルの全弟に注目。血統と近況から見て、これは来る！データ的にも完璧な条件が揃いました。 #有馬記念 #競馬予想",
+        "likes": 24,
+        "retweets": 8,
+        "comments": 12
+    },
+    {
+        "id": 2,
+        "author": "うま恋日記",
+        "handle": "@uma_koi",
+        "avatar": "profile.png",
+        "time": "1日前",
+        "content": "阪神11R 三連単 見事的中！パドックでの歩様チェックが決め手でした。1番人気を軸に、穴馬2頭をキャッチ。配当は93,840円！ #競馬 #的中",
+        "likes": 45,
+        "retweets": 23,
+        "comments": 19
+    },
+    {
+        "id": 3,
+        "author": "うま恋日記",
+        "handle": "@uma_koi",
+        "avatar": "profile.png",
+        "time": "3日前",
+        "content": "今週末の雨予報を受けて、重馬場での種牡馬別成績を調査中。ディープインパクト産駒の成績が気になるところ...🤔 重馬場での勝率は11.2%（良馬場15.8%）という結果に。",
+        "likes": 18,
+        "retweets": 6,
+        "comments": 8
+    }
+]

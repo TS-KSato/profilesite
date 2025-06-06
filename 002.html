@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>うま恋日記 – 競馬プロフィール</title>
+    <meta name="description" content="競馬のある週末が好きです。パドックでの一瞬の表情や、静かな直線の駆け引きに惹かれます。データも直感も大切に、気ままに予想や感想を綴ります。">
+    <meta name="robots" content="index,follow">
+    <meta name="theme-color" content="#46a049">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="うま恋日記 – 競馬プロフィール">
+    <meta property="og:description" content="競馬のある週末が好きです。パドックでの一瞬の表情や、静かな直線の駆け引きに惹かれます。">
+    <meta property="og:type" content="profile">
+    <meta property="og:image" content="/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== シンプルなデザインシステム ===== */
+        :root {
+            --primary: #46a049;
+            --primary-light: #7bc47f;
+            --primary-dark: #2e6d34;
+            --accent: #d4af37;
+            --text: #333;
+            --text-light: #666;
+            --text-muted: #999;
+            --bg: #ffffff;
+            --bg-alt: #f8f9fa;
+            --border: #e1e5e9;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.15);
+            --radius: 8px;
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2rem;
+            --space-xl: 3rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg);
+            cursor: none;
+        }
+
+        /* ===== カスタムカーソル ===== */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+        }
+
+        .cursor.hover {
+            transform: scale(1.5);
+            background: var(--primary);
+        }
+
+        @media (pointer: coarse) {
+            body { cursor: auto; }
+            .cursor { display: none; }
+        }
+
+        /* ===== ヘッダー ===== */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            text-align: center;
+            padding: var(--space-xl) var(--space-md);
+            position: relative;
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header-content h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+        }
+
+        .header-content p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        /* ===== プロフィール写真 ===== */
+        .profile-image-container {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: var(--shadow-lg);
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            display: block;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.1);
+        }
+
+        /* ===== メインコンテンツ ===== */
+        .main {
+            max-width: 800px;
+            margin: 80px auto 0;
+            padding: 0 var(--space-md);
+        }
+
+        .section {
+            background: var(--bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: var(--space-lg);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .section-content {
+            padding: var(--space-md);
+        }
+
+        /* ===== X風タイムライン ===== */
+        .timeline-refresh {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--primary);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .timeline-refresh:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .timeline-posts {
+            border-top: 1px solid var(--border);
+        }
+
+        .timeline-post {
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--border);
+            transition: background-color 0.2s ease;
+        }
+
+        .timeline-post:hover {
+            background: var(--bg-alt);
+        }
+
+        .timeline-post:last-child {
+            border-bottom: none;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xs);
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .post-meta {
+            flex: 1;
+        }
+
+        .post-author {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        .post-handle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .post-time {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .post-content {
+            margin-left: 52px;
+            line-height: 1.5;
+            margin-bottom: var(--space-sm);
+        }
+
+        .post-actions {
+            display: flex;
+            gap: var(--space-lg);
+            margin-left: 52px;
+        }
+
+        .post-action {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .post-action:hover {
+            color: var(--primary);
+        }
+
+        .post-action svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ===== 自己紹介 ===== */
+        .about-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: var(--space-md);
+        }
+
+        .sns-links {
+            display: flex;
+            gap: var(--space-sm);
+            margin-top: var(--space-md);
+        }
+
+        .sns-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+
+        .sns-link:hover {
+            transform: translateY(-2px);
+            background: var(--primary-dark);
+        }
+
+        .sns-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ===== 今週の注目 ===== */
+        .race-list {
+            list-style: none;
+        }
+
+        .race-item {
+            padding: var(--space-sm);
+            background: var(--bg-alt);
+            border-radius: var(--radius);
+            margin-bottom: var(--space-sm);
+            border-left: 4px solid var(--primary);
+        }
+
+        .race-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .race-title {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: var(--space-xs);
+        }
+
+        .race-details {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* ===== ローディング ===== */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-lg);
+            color: var(--text-muted);
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top: 2px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: var(--space-xs);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ===== フッター ===== */
+        .footer {
+            background: var(--bg-alt);
+            text-align: center;
+            padding: var(--space-xl) var(--space-md);
+            margin-top: var(--space-xl);
+            border-top: 1px solid var(--border);
+        }
+
+        .footer p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ===== レスポンシブ ===== */
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .header-content p {
+                font-size: 1.1rem;
+            }
+            
+            .main {
+                margin-top: 60px;
+                padding: 0 var(--space-sm);
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-sm);
+            }
+            
+            .profile-image {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .profile-image-container {
+                bottom: -50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content h1 {
+                font-size: 2rem;
+            }
+            
+            .post-actions {
+                margin-left: 0;
+            }
+            
+            .post-content {
+                margin-left: 0;
+            }
+            
+            .post-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* ===== アクセシビリティ ===== */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            .cursor { display: none; }
+            body { cursor: auto; }
+        }
+
+        *:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- カスタムカーソル -->
+    <div class="cursor"></div>
+
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="header-content">
+            <h1>うま恋日記</h1>
+            <p>
+                競馬のある週末が好きです。パドックでの一瞬の表情や、静かな直線の駆け引きに惹かれます。<br>
+                データも直感も大切に、気ままに予想や感想を綴ります。
+            </p>
+        </div>
+        
+        <!-- プロフィール写真 -->
+        <div class="profile-image-container">
+            <img src="profile.png" alt="うま恋日記のプロフィール写真" class="profile-image" loading="lazy">
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="main">
+        <!-- X風タイムライン -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">最新タイムライン</h2>
+                <button class="timeline-refresh" onclick="loadTimeline()" aria-label="タイムラインを更新">
+                    🔄 更新
+                </button>
+            </div>
+            <div id="timeline-container">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    読み込み中...
+                </div>
+            </div>
+        </section>
+
+        <!-- 自己紹介 -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">自己紹介</h2>
+            </div>
+            <div class="section-content">
+                <p class="about-text">
+                    競馬と出会って10年が経ちました。普段は数字やロジックと向き合う仕事をしているからか、週末は理屈ではないドラマが生まれるターフに心惹かれます。私にとって競馬の本当の楽しさは、馬場の含水率といった繊細なデータまで読み解き、深くレースを想像すること。その探求の時間が、何よりの贅沢です。
+                </p>
+                
+                <div class="sns-links">
+                    <a href="https://x.com/USERNAME" target="_blank" rel="noopener noreferrer" class="sns-link" aria-label="X(Twitter)">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14.98 10.7 23.4 0h-2.14l-7.55 9.13L7.83 0H0l8.82 13.06L0 24h2.14l7.97-9.63L16.17 24H24l-9.02-13.3Z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 今週の注目 -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">今週注目のレース</h2>
+            </div>
+            <div class="section-content">
+                <ul class="race-list">
+                    <li class="race-item">
+                        <div class="race-title">6/7 (土) 東京10R 芝1800m</div>
+                        <div class="race-details">◎ジャスタウェイ産駒に注目</div>
+                    </li>
+                    <li class="race-item">
+                        <div class="race-title">6/8 (日) 阪神11R 芝1600m</div>
+                        <div class="race-details">穴ならキズナ産駒</div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <p>&copy; 2025 うま恋日記 All Rights Reserved.</p>
+        <p>※ 掲載されている予想は個人の見解であり、的中を保証するものではありません。投票は自己責任でお願いします。</p>
+    </footer>
+
+    <script>
+        /**
+         * うま恋日記 - シンプルなプロフィールサイト
+         * X風タイムライン機能付き
+         */
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeCursor();
+            loadTimeline();
+        });
+
+        // カスタムカーソル
+        function initializeCursor() {
+            const cursor = document.querySelector('.cursor');
+            if (!cursor) return;
+
+            const hoverElements = document.querySelectorAll('a, button, .timeline-post, .race-item, .profile-image');
+
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX - 10 + 'px';
+                cursor.style.top = e.clientY - 10 + 'px';
+            });
+
+            hoverElements.forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+            });
+        }
+
+        // タイムラインデータ（JSON形式）
+        const timelineData = [
+            {
+                id: 1,
+                author: "うま恋日記",
+                handle: "@uma_koi",
+                avatar: "profile.png",
+                time: "2時間前",
+                content: "有馬記念2025 大本命発表！コントレイルの全弟に注目。血統と近況から見て、これは来る！データ的にも完璧な条件が揃いました。 #有馬記念 #競馬予想",
+                likes: 24,
+                retweets: 8,
+                comments: 12
+            },
+            {
+                id: 2,
+                author: "うま恋日記",
+                handle: "@uma_koi",
+                avatar: "profile.png",
+                time: "1日前",
+                content: "阪神11R 三連単 見事的中！パドックでの歩様チェックが決め手でした。1番人気を軸に、穴馬2頭をキャッチ。配当は93,840円！ #競馬 #的中",
+                likes: 45,
+                retweets: 23,
+                comments: 19
+            },
+            {
+                id: 3,
+                author: "うま恋日記",
+                handle: "@uma_koi",
+                avatar: "profile.png",
+                time: "3日前",
+                content: "今週末の雨予報を受けて、重馬場での種牡馬別成績を調査中。ディープインパクト産駒の成績が気になるところ...🤔 重馬場での勝率は11.2%（良馬場15.8%）という結果に。",
+                likes: 18,
+                retweets: 6,
+                comments: 8
+            }
+        ];
+
+        // タイムライン読み込み
+        async function loadTimeline() {
+            const container = document.getElementById('timeline-container');
+            if (!container) return;
+
+            // ローディング表示
+            container.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    読み込み中...
+                </div>
+            `;
+
+            try {
+                // 実際の実装では外部JSONから取得
+                // const response = await fetch('timeline.json');
+                // const data = await response.json();
+                
+                await new Promise(resolve => setTimeout(resolve, 800));
+                const data = timelineData;
+
+                displayTimeline(data.slice(0, 3)); // 最新3件表示
+            } catch (error) {
+                console.error('タイムライン読み込みエラー:', error);
+                container.innerHTML = `
+                    <div style="text-align: center; padding: var(--space-lg); color: var(--text-muted);">
+                        読み込みに失敗しました。
+                        <button onclick="loadTimeline()" style="margin-left: var(--space-xs); color: var(--primary); cursor: pointer; background: none; border: none;">再試行</button>
+                    </div>
+                `;
+            }
+        }
+
+        // タイムライン表示
+        function displayTimeline(posts) {
+            const container = document.getElementById('timeline-container');
+            if (!container) return;
+
+            const postsHTML = posts.map(post => `
+                <article class="timeline-post">
+                    <div class="post-header">
+                        <img src="${escapeHtml(post.avatar)}" alt="${escapeHtml(post.author)}のアバター" class="post-avatar" loading="lazy">
+                        <div class="post-meta">
+                            <div class="post-author">${escapeHtml(post.author)}</div>
+                            <div class="post-handle">${escapeHtml(post.handle)} · <span class="post-time">${escapeHtml(post.time)}</span></div>
+                        </div>
+                    </div>
+                    <div class="post-content">${escapeHtml(post.content)}</div>
+                    <div class="post-actions">
+                        <div class="post-action">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                            </svg>
+                            ${post.comments}
+                        </div>
+                        <div class="post-action">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                            ${post.retweets}
+                        </div>
+                        <div class="post-action">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                            </svg>
+                            ${post.likes}
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+
+            container.innerHTML = `<div class="timeline-posts">${postsHTML}</div>`;
+        }
+
+        // HTMLエスケープ
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // エラーハンドリング
+        window.addEventListener('error', (e) => {
+            console.error('エラーが発生しました:', e.error);
+        });
+
+        // パフォーマンス監視
+        if ('performance' in window) {
+            window.addEventListener('load', () => {
+                const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+                console.log(`ページ読み込み時間: ${loadTime}ms`);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -31,17 +31,49 @@
         }
         *{box-sizing:border-box;margin:0;padding:0;}
         body{font-family:'Noto Sans JP',sans-serif;color:var(--text);background:var(--bg);line-height:1.7;}
-        header{background:linear-gradient(135deg,var(--turf-green) 0%,var(--turf-green-dark) 100%);color:#fff;text-align:center;padding:4rem 1rem 6rem;position:relative;overflow:hidden;}
+
+        /* ----- HERO HEADER ----- */
+        header{
+            background:linear-gradient(135deg,var(--turf-green) 0%,var(--turf-green-dark) 100%);
+            color:#fff;
+            text-align:center;
+            padding:4rem 1rem 6rem;
+            position:relative;
+            overflow:visible; /* allow avatar to spill out */
+        }
         header h1{font-size:2.5rem;font-weight:700;letter-spacing:.05em;}
         header p{font-size:1rem;margin-top:.75rem;opacity:.9;}
-        .profile-img{width:180px;height:180px;border-radius:50%;object-fit:cover;border:6px solid #fff;position:absolute;bottom:-90px;left:50%;transform:translateX(-50%);background:#fff;}
-        main{max-width:800px;margin:8rem auto 0;padding:0 1rem;}
+
+        /* ----- PROFILE IMAGE ----- */
+        .profile-img{
+            width:180px;height:180px;
+            border-radius:50%;
+            object-fit:cover;
+            border:6px solid #fff;
+            position:absolute;
+            bottom:-90px; /* half overlaps header & main */
+            left:50%;transform:translateX(-50%);
+            background:#fff;
+            z-index:10; /* ensure on top of main */
+        }
+
+        /* ----- MAIN BODY ----- */
+        main{
+            max-width:800px;
+            margin:10rem auto 0; /* push down to clear avatar */
+            padding:0 1rem;
+            position:relative;
+        }
         section{margin-bottom:3rem;}
         h2{font-size:1.5rem;border-left:6px solid var(--turf-green);padding-left:.75rem;margin-bottom:1rem;}
+
+        /* SNS */
         .sns{display:flex;gap:.75rem;margin-top:1rem;}
         .sns a{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:var(--turf-green);color:#fff;text-decoration:none;transition:.2s;}
-        .sns a:hover{background:var(--turf-green-dark);}
+        .sns a:hover{background:var(--turf-green-dark);} 
         .sns svg{width:24px;height:24px;fill:currentColor;}
+
+        /* ----- FOOTER ----- */
         #compliance{background:#fafafa;font-size:.75rem;color:#555;text-align:center;padding:2rem 1rem;margin-top:4rem;}
         #compliance a{color:var(--turf-green-dark);text-decoration:none;}
         #compliance a:hover{text-decoration:underline;}
@@ -58,7 +90,7 @@
     <main>
         <section id="about">
             <h2>自己紹介</h2>
-            <p>競馬歴10年、パドックで馬の気性を読むのが得意。普段はITエンジニアとしてコードと戦いつつ、週末はターフで勝負。馬券は<br>ハイブリッド派。</p>
+            <p>競馬歴10年、パドックで馬の気性を読むのが得意。普段はITエンジニアとしてコードと戦いつつ、週末はターフで勝負。馬券はハイブリッド派。</p>
             <div class="sns" aria-label="ソーシャルリンク">
                 <a href="https://x.com/USERNAME" target="_blank" rel="noopener noreferrer" aria-label="X(Twitter) プロフィール">
                     <!-- Simple X logo SVG -->

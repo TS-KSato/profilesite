@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyLinks - プロフィールリンク集約サービス</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-gradient-1: #667eea;
+            --bg-gradient-2: #764ba2;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-shadow: rgba(0, 0, 0, 0.1);
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --accent-color: #667eea;
+            --success-color: #48bb78;
+            --danger-color: #f56565;
+            --border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Floating Particles Background */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+        }
+
+        /* Main Content */
+        .main-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Admin Toggle */
+        .admin-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--card-bg);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            box-shadow: 0 4px 15px var(--card-shadow);
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--accent-color);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .admin-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--card-shadow);
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px var(--card-shadow);
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .profile-card:hover::before {
+            left: 100%;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--bg-gradient-1), var(--bg-gradient-2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .profile-avatar input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .profile-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--bg-gradient-1), var(--bg-gradient-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .profile-description {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-color);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Links Container */
+        .links-container {
+            margin-bottom: 30px;
+        }
+
+        .link-item {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .link-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px var(--card-shadow);
+        }
+
+        .link-item.sortable-ghost {
+            opacity: 0.5;
+        }
+
+        .link-button {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            text-decoration: none;
+            color: var(--text-primary);
+            width: 100%;
+            border: none;
+            background: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .link-button:hover::before {
+            left: 100%;
+        }
+
+        .link-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            margin-right: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .link-content {
+            flex: 1;
+            text-align: left;
+        }
+
+        .link-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .link-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .link-arrow {
+            font-size: 18px;
+            color: var(--text-secondary);
+            transition: transform 0.3s ease;
+        }
+
+        .link-item:hover .link-arrow {
+            transform: translateX(4px);
+        }
+
+        .link-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: none;
+            gap: 8px;
+        }
+
+        .link-item:hover .link-controls {
+            display: flex;
+        }
+
+        .control-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .edit-btn {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .delete-btn {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Add Link Button */
+        .add-link-btn {
+            width: 100%;
+            padding: 20px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            color: var(--accent-color);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .add-link-btn:hover {
+            border-color: var(--accent-color);
+            background: rgba(102, 126, 234, 0.05);
+            transform: translateY(-2px);
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--border-color);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color 0.2s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            color: var(--text-primary);
+            border-color: var(--text-secondary);
+        }
+
+        /* QR Code Section */
+        .qr-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px var(--card-shadow);
+        }
+
+        /* Share Button */
+        .share-btn {
+            background: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .share-btn:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        /* Analytics Panel */
+        .analytics-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .analytics-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+        }
+
+        .analytics-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .analytics-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-color);
+            display: block;
+        }
+
+        .analytics-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        /* Theme Selector */
+        .theme-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .theme-option {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .theme-option.active {
+            border-color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        .theme-option:hover {
+            transform: scale(1.05);
+        }
+
+        /* Predefined link styles */
+        .link-instagram { background: linear-gradient(135deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); color: white; }
+        .link-twitter { background: #1da1f2; color: white; }
+        .link-youtube { background: #ff0000; color: white; }
+        .link-tiktok { background: linear-gradient(135deg, #ff0050, #00f2ea); color: white; }
+        .link-linkedin { background: #0077b5; color: white; }
+        .link-github { background: #333; color: white; }
+        .link-website { background: linear-gradient(135deg, var(--bg-gradient-1), var(--bg-gradient-2)); color: white; }
+        .link-spotify { background: #1db954; color: white; }
+        .link-discord { background: #7289da; color: white; }
+        .link-custom { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+
+        /* Mobile Optimizations */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .profile-card {
+                padding: 30px 20px;
+            }
+            
+            .profile-avatar {
+                width: 100px;
+                height: 100px;
+                font-size: 40px;
+            }
+            
+            .profile-name {
+                font-size: 24px;
+            }
+            
+            .link-button {
+                padding: 16px;
+            }
+            
+            .link-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            
+            .link-title {
+                font-size: 16px;
+            }
+            
+            .modal-content {
+                margin: 20px;
+                padding: 24px;
+            }
+        }
+
+        /* Admin-only elements */
+        .admin-only {
+            display: none;
+        }
+
+        .admin-mode .admin-only {
+            display: block;
+        }
+
+        .admin-mode .link-controls {
+            display: flex !important;
+        }
+
+        /* Loading Animation */
+        .loading {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Sortable styles */
+        .sortable-chosen {
+            transform: scale(1.02);
+        }
+
+        .sortable-drag {
+            opacity: 0.8;
+            transform: rotate(2deg);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Particles -->
+    <div class="bg-particles" id="particles"></div>
+
+    <!-- Admin Toggle -->
+    <button class="admin-toggle" onclick="toggleAdmin()">
+        <span id="admin-text">管理モード</span>
+    </button>
+
+    <div class="container">
+        <div class="main-content">
+            <!-- Profile Card -->
+            <div class="profile-card loading">
+                <div class="profile-avatar" onclick="selectAvatar()">
+                    <span id="avatar-text">M</span>
+                    <input type="file" id="avatar-input" accept="image/*" style="display: none;">
+                </div>
+                <div class="profile-name" contenteditable="false" id="profile-name">My Links</div>
+                <div class="profile-description" contenteditable="false" id="profile-description">
+                    あなたのすべてのリンクを一つの場所に。SNS、ウェブサイト、作品など、簡単にシェアしましょう。
+                </div>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="total-links">0</span>
+                        <span class="stat-label">Links</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="total-clicks">0</span>
+                        <span class="stat-label">Clicks</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="total-views">0</span>
+                        <span class="stat-label">Views</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Panel (Admin Only) -->
+            <div class="analytics-panel admin-only loading">
+                <div class="analytics-title">📊 Analytics</div>
+                <div class="analytics-grid">
+                    <div class="analytics-item">
+                        <span class="analytics-number" id="today-clicks">0</span>
+                        <div class="analytics-label">今日のクリック</div>
+                    </div>
+                    <div class="analytics-item">
+                        <span class="analytics-number" id="weekly-clicks">0</span>
+                        <div class="analytics-label">週間クリック</div>
+                    </div>
+                    <div class="analytics-item">
+                        <span class="analytics-number" id="popular-link">-</span>
+                        <div class="analytics-label">人気リンク</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Link Button (Admin Only) -->
+            <button class="add-link-btn admin-only loading" onclick="openAddLinkModal()">
+                ➕ リンクを追加
+            </button>
+
+            <!-- Links Container -->
+            <div class="links-container" id="links-container">
+                <!-- Links will be dynamically inserted here -->
+            </div>
+
+            <!-- QR Code Section -->
+            <div class="qr-section loading">
+                <h3 style="margin-bottom: 16px;">📱 QRコードでシェア</h3>
+                <div class="qr-code" id="qr-code">
+                    <canvas id="qr-canvas"></canvas>
+                </div>
+                <button class="share-btn" onclick="shareProfile()">
+                    🔗 プロフィールをシェア
+                </button>
+            </div>
+
+            <!-- Theme Selector (Admin Only) -->
+            <div class="qr-section admin-only loading">
+                <h3 style="margin-bottom: 16px;">🎨 テーマ選択</h3>
+                <div class="theme-selector">
+                    <div class="theme-option active" style="background: linear-gradient(135deg, #667eea, #764ba2);" onclick="changeTheme('default')"></div>
+                    <div class="theme-option" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);" onclick="changeTheme('sunset')"></div>
+                    <div class="theme-option" style="background: linear-gradient(135deg, #00d2ff, #3a7bd5);" onclick="changeTheme('ocean')"></div>
+                    <div class="theme-option" style="background: linear-gradient(135deg, #2ecc71, #27ae60);" onclick="changeTheme('nature')"></div>
+                    <div class="theme-option" style="background: linear-gradient(135deg, #f093fb, #f5576c);" onclick="changeTheme('pink')"></div>
+                    <div class="theme-option" style="background: linear-gradient(135deg, #4facfe, #00f2fe);" onclick="changeTheme('sky')"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link Edit Modal -->
+    <div class="modal" id="link-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">リンクを追加</h3>
+                <button class="close-btn" onclick="closeLinkModal()">&times;</button>
+            </div>
+            <form id="link-form">
+                <div class="form-group">
+                    <label class="form-label">プラットフォーム</label>
+                    <select class="form-select" id="link-platform" onchange="updateLinkPreview()">
+                        <option value="custom">カスタム</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="twitter">Twitter</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="tiktok">TikTok</option>
+                        <option value="linkedin">LinkedIn</option>
+                        <option value="github">GitHub</option>
+                        <option value="website">Website</option>
+                        <option value="spotify">Spotify</option>
+                        <option value="discord">Discord</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">タイトル</label>
+                    <input type="text" class="form-input" id="link-title" placeholder="リンクのタイトル" oninput="updateLinkPreview()">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">説明（オプション）</label>
+                    <input type="text" class="form-input" id="link-subtitle" placeholder="短い説明" oninput="updateLinkPreview()">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">URL</label>
+                    <input type="url" class="form-input" id="link-url" placeholder="https://example.com" oninput="updateLinkPreview()">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">アイコン (絵文字)</label>
+                    <input type="text" class="form-input" id="link-icon" placeholder="🔗" maxlength="2" oninput="updateLinkPreview()">
+                </div>
+                
+                <!-- Link Preview -->
+                <div class="form-group">
+                    <label class="form-label">プレビュー</label>
+                    <div class="link-item" id="link-preview">
+                        <div class="link-button">
+                            <div class="link-icon" id="preview-icon">🔗</div>
+                            <div class="link-content">
+                                <div class="link-title" id="preview-title">リンクタイトル</div>
+                                <div class="link-subtitle" id="preview-subtitle">説明文</div>
+                            </div>
+                            <div class="link-arrow">→</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="closeLinkModal()">キャンセル</button>
+                    <button type="submit" class="btn btn-primary" id="save-btn">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+    
+    <!-- Sortable.js for drag & drop -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+    <script>
+        // Global State
+        let isAdminMode = false;
+        let editingLinkId = null;
+        let linksData = [];
+        let profileData = {
+            name: 'My Links',
+            description: 'あなたのすべてのリンクを一つの場所に。SNS、ウェブサイト、作品など、簡単にシェアしましょう。',
+            avatar: 'M',
+            theme: 'default'
+        };
+        let analyticsData = {
+            totalClicks: 0,
+            totalViews: 1,
+            todayClicks: 0,
+            weeklyClicks: 0,
+            linkClicks: {}
+        };
+
+        // Platform configurations
+        const platformConfig = {
+            instagram: { icon: '📷', defaultTitle: 'Instagram', color: 'linear-gradient(135deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%)' },
+            twitter: { icon: '🐦', defaultTitle: 'Twitter', color: '#1da1f2' },
+            youtube: { icon: '🎥', defaultTitle: 'YouTube', color: '#ff0000' },
+            tiktok: { icon: '🎵', defaultTitle: 'TikTok', color: 'linear-gradient(135deg, #ff0050, #00f2ea)' },
+            linkedin: { icon: '💼', defaultTitle: 'LinkedIn', color: '#0077b5' },
+            github: { icon: '💻', defaultTitle: 'GitHub', color: '#333' },
+            website: { icon: '🌐', defaultTitle: 'Website', color: 'linear-gradient(135deg, #667eea, #764ba2)' },
+            spotify: { icon: '🎧', defaultTitle: 'Spotify', color: '#1db954' },
+            discord: { icon: '🎮', defaultTitle: 'Discord', color: '#7289da' },
+            custom: { icon: '🔗', defaultTitle: 'Custom Link', color: 'linear-gradient(135deg, #667eea, #764ba2)' }
+        };
+
+        // Theme configurations
+        const themes = {
+            default: { bg1: '#667eea', bg2: '#764ba2' },
+            sunset: { bg1: '#ff6b6b', bg2: '#ee5a24' },
+            ocean: { bg1: '#00d2ff', bg2: '#3a7bd5' },
+            nature: { bg1: '#2ecc71', bg2: '#27ae60' },
+            pink: { bg1: '#f093fb', bg2: '#f5576c' },
+            sky: { bg1: '#4facfe', bg2: '#00f2fe' }
+        };
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            renderProfile();
+            renderLinks();
+            generateQRCode();
+            createParticles();
+            initializeSortable();
+            updateStats();
+            
+            // Increment view count
+            analyticsData.totalViews++;
+            saveData();
+            
+            // Add loading animation delays
+            setTimeout(() => {
+                document.querySelectorAll('.loading').forEach((el, index) => {
+                    setTimeout(() => {
+                        el.style.opacity = '1';
+                        el.style.transform = 'translateY(0)';
+                    }, index * 100);
+                });
+            }, 100);
+        });
+
+        // Data persistence
+        function saveData() {
+            localStorage.setItem('mylinks_profile', JSON.stringify(profileData));
+            localStorage.setItem('mylinks_links', JSON.stringify(linksData));
+            localStorage.setItem('mylinks_analytics', JSON.stringify(analyticsData));
+        }
+
+        function loadData() {
+            const savedProfile = localStorage.getItem('mylinks_profile');
+            const savedLinks = localStorage.getItem('mylinks_links');
+            const savedAnalytics = localStorage.getItem('mylinks_analytics');
+            
+            if (savedProfile) {
+                profileData = { ...profileData, ...JSON.parse(savedProfile) };
+            }
+            if (savedLinks) {
+                linksData = JSON.parse(savedLinks);
+            }
+            if (savedAnalytics) {
+                analyticsData = { ...analyticsData, ...JSON.parse(savedAnalytics) };
+            }
+            
+            // Apply saved theme
+            if (profileData.theme) {
+                changeTheme(profileData.theme);
+            }
+        }
+
+        // Admin mode toggle
+        function toggleAdmin() {
+            isAdminMode = !isAdminMode;
+            document.body.classList.toggle('admin-mode', isAdminMode);
+            document.getElementById('admin-text').textContent = isAdminMode ? '表示モード' : '管理モード';
+            
+            if (isAdminMode) {
+                enableEditMode();
+            } else {
+                disableEditMode();
+            }
+        }
+
+        function enableEditMode() {
+            document.getElementById('profile-name').contentEditable = true;
+            document.getElementById('profile-description').contentEditable = true;
+            
+            // Add save listeners
+            document.getElementById('profile-name').addEventListener('blur', saveProfileData);
+            document.getElementById('profile-description').addEventListener('blur', saveProfileData);
+        }
+
+        function disableEditMode() {
+            document.getElementById('profile-name').contentEditable = false;
+            document.getElementById('profile-description').contentEditable = false;
+        }
+
+        function saveProfileData() {
+            profileData.name = document.getElementById('profile-name').textContent;
+            profileData.description = document.getElementById('profile-description').textContent;
+            saveData();
+            generateQRCode();
+        }
+
+        // Profile rendering
+        function renderProfile() {
+            document.getElementById('profile-name').textContent = profileData.name;
+            document.getElementById('profile-description').textContent = profileData.description;
+            document.getElementById('avatar-text').textContent = profileData.avatar;
+        }
+
+        // Avatar selection
+        function selectAvatar() {
+            if (isAdminMode) {
+                document.getElementById('avatar-input').click();
+            }
+        }
+
+        document.getElementById('avatar-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatar = document.querySelector('.profile-avatar');
+                    avatar.style.backgroundImage = `url(${e.target.result})`;
+                    avatar.style.backgroundSize = 'cover';
+                    avatar.style.backgroundPosition = 'center';
+                    document.getElementById('avatar-text').style.display = 'none';
+                    
+                    profileData.avatarImage = e.target.result;
+                    saveData();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Links management
+        function renderLinks() {
+            const container = document.getElementById('links-container');
+            container.innerHTML = '';
+            
+            linksData.forEach((link, index) => {
+                const linkElement = createLinkElement(link, index);
+                container.appendChild(linkElement);
+            });
+            
+            updateStats();
+        }
+
+        function createLinkElement(link, index) {
+            const linkDiv = document.createElement('div');
+            linkDiv.className = 'link-item';
+            linkDiv.setAttribute('data-id', link.id);
+            
+            const platform = platformConfig[link.platform] || platformConfig.custom;
+            const iconBg = link.platform !== 'custom' ? platform.color : 'linear-gradient(135deg, #667eea, #764ba2)';
+            
+            linkDiv.innerHTML = `
+                <div class="link-button" onclick="handleLinkClick('${link.id}')">
+                    <div class="link-icon link-${link.platform}" style="background: ${iconBg}">
+                        ${link.icon || platform.icon}
+                    </div>
+                    <div class="link-content">
+                        <div class="link-title">${link.title}</div>
+                        ${link.subtitle ? `<div class="link-subtitle">${link.subtitle}</div>` : ''}
+                    </div>
+                    <div class="link-arrow">→</div>
+                </div>
+                <div class="link-controls admin-only">
+                    <button class="control-btn edit-btn" onclick="editLink('${link.id}')" title="編集">✏️</button>
+                    <button class="control-btn delete-btn" onclick="deleteLink('${link.id}')" title="削除">🗑️</button>
+                </div>
+            `;
+            
+            return linkDiv;
+        }
+
+        function handleLinkClick(linkId) {
+            if (isAdminMode) return;
+            
+            const link = linksData.find(l => l.id === linkId);
+            if (link) {
+                // Track click
+                analyticsData.totalClicks++;
+                analyticsData.todayClicks++;
+                analyticsData.weeklyClicks++;
+                analyticsData.linkClicks[linkId] = (analyticsData.linkClicks[linkId] || 0) + 1;
+                
+                saveData();
+                updateStats();
+                
+                // Open link
+                window.open(link.url, '_blank');
+            }
+        }
+
+        // Link modal functions
+        function openAddLinkModal() {
+            editingLinkId = null;
+            document.getElementById('modal-title').textContent = 'リンクを追加';
+            document.getElementById('save-btn').textContent = '追加';
+            clearLinkForm();
+            document.getElementById('link-modal').classList.add('active');
+        }
+
+        function editLink(linkId) {
+            editingLinkId = linkId;
+            const link = linksData.find(l => l.id === linkId);
+            
+            document.getElementById('modal-title').textContent = 'リンクを編集';
+            document.getElementById('save-btn').textContent = '更新';
+            
+            // Populate form
+            document.getElementById('link-platform').value = link.platform;
+            document.getElementById('link-title').value = link.title;
+            document.getElementById('link-subtitle').value = link.subtitle || '';
+            document.getElementById('link-url').value = link.url;
+            document.getElementById('link-icon').value = link.icon || '';
+            
+            updateLinkPreview();
+            document.getElementById('link-modal').classList.add('active');
+        }
+
+        function closeLinkModal() {
+            document.getElementById('link-modal').classList.remove('active');
+            clearLinkForm();
+        }
+
+        function clearLinkForm() {
+            document.getElementById('link-form').reset();
+            updateLinkPreview();
+        }
+
+        function updateLinkPreview() {
+            const platform = document.getElementById('link-platform').value;
+            const title = document.getElementById('link-title').value;
+            const subtitle = document.getElementById('link-subtitle').value;
+            const icon = document.getElementById('link-icon').value;
+            
+            const config = platformConfig[platform];
+            const previewTitle = title || config.defaultTitle;
+            const previewIcon = icon || config.icon;
+            
+            document.getElementById('preview-title').textContent = previewTitle;
+            document.getElementById('preview-subtitle').textContent = subtitle;
+            document.getElementById('preview-icon').textContent = previewIcon;
+            
+            const previewIconEl = document.getElementById('preview-icon');
+            previewIconEl.style.background = config.color;
+            previewIconEl.parentNode.className = `link-item link-${platform}`;
+        }
+
+        // Form submission
+        document.getElementById('link-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const platform = document.getElementById('link-platform').value;
+            const title = document.getElementById('link-title').value;
+            const subtitle = document.getElementById('link-subtitle').value;
+            const url = document.getElementById('link-url').value;
+            const icon = document.getElementById('link-icon').value;
+            
+            if (!title || !url) {
+                alert('タイトルとURLは必須です');
+                return;
+            }
+            
+            const linkData = {
+                id: editingLinkId || generateId(),
+                platform,
+                title,
+                subtitle,
+                url,
+                icon: icon || platformConfig[platform].icon,
+                createdAt: editingLinkId ? linksData.find(l => l.id === editingLinkId).createdAt : Date.now()
+            };
+            
+            if (editingLinkId) {
+                const index = linksData.findIndex(l => l.id === editingLinkId);
+                linksData[index] = linkData;
+            } else {
+                linksData.push(linkData);
+            }
+            
+            saveData();
+            renderLinks();
+            closeLinkModal();
+        });
+
+        function deleteLink(linkId) {
+            if (confirm('このリンクを削除しますか？')) {
+                linksData = linksData.filter(l => l.id !== linkId);
+                saveData();
+                renderLinks();
+            }
+        }
+
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        // Sortable functionality
+        function initializeSortable() {
+            const container = document.getElementById('links-container');
+            new Sortable(container, {
+                animation: 150,
+                disabled: false,
+                onEnd: function(evt) {
+                    if (!isAdminMode) return;
+                    
+                    const oldIndex = evt.oldIndex;
+                    const newIndex = evt.newIndex;
+                    
+                    // Reorder array
+                    const item = linksData.splice(oldIndex, 1)[0];
+                    linksData.splice(newIndex, 0, item);
+                    
+                    saveData();
+                }
+            });
+        }
+
+        // QR Code generation
+        function generateQRCode() {
+            const canvas = document.getElementById('qr-canvas');
+            const url = window.location.href;
+            
+            QRCode.toCanvas(canvas, url, {
+                width: 180,
+                margin: 2,
+                color: {
+                    dark: '#000000',
+                    light: '#FFFFFF'
+                }
+            });
+        }
+
+        // Share functionality
+        async function shareProfile() {
+            const url = window.location.href;
+            const title = profileData.name;
+            const text = profileData.description;
+            
+            if (navigator.share) {
+                try {
+                    await navigator.share({ title, text, url });
+                } catch (err) {
+                    copyToClipboard(url);
+                }
+            } else {
+                copyToClipboard(url);
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('URLをクリップボードにコピーしました！');
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('URLをクリップボードにコピーしました！');
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--success-color);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                z-index: 3000;
+                animation: slideUp 0.3s ease;
+            `;
+            
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Theme changing
+        function changeTheme(themeName) {
+            const theme = themes[themeName];
+            if (!theme) return;
+            
+            document.documentElement.style.setProperty('--bg-gradient-1', theme.bg1);
+            document.documentElement.style.setProperty('--bg-gradient-2', theme.bg2);
+            
+            // Update active theme selector
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            profileData.theme = themeName;
+            saveData();
+        }
+
+        // Statistics
+        function updateStats() {
+            document.getElementById('total-links').textContent = linksData.length;
+            document.getElementById('total-clicks').textContent = analyticsData.totalClicks;
+            document.getElementById('total-views').textContent = analyticsData.totalViews;
+            document.getElementById('today-clicks').textContent = analyticsData.todayClicks;
+            document.getElementById('weekly-clicks').textContent = analyticsData.weeklyClicks;
+            
+            // Find most popular link
+            let popularLinkId = null;
+            let maxClicks = 0;
+            for (const [linkId, clicks] of Object.entries(analyticsData.linkClicks)) {
+                if (clicks > maxClicks) {
+                    maxClicks = clicks;
+                    popularLinkId = linkId;
+                }
+            }
+            
+            const popularLink = popularLinkId ? linksData.find(l => l.id === popularLinkId) : null;
+            document.getElementById('popular-link').textContent = popularLink ? popularLink.title : '-';
+        }
+
+        // Background particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Modal close on outside click
+        document.getElementById('link-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLinkModal();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLinkModal();
+            }
+            if (e.key === 'a' && e.ctrlKey && isAdminMode) {
+                e.preventDefault();
+                openAddLinkModal();
+            }
+        });
+
+        // Add some sample data for demonstration
+        if (linksData.length === 0) {
+            linksData = [
+                {
+                    id: 'sample1',
+                    platform: 'instagram',
+                    title: 'Instagram',
+                    subtitle: 'フォローしてね！',
+                    url: 'https://instagram.com',
+                    icon: '📷',
+                    createdAt: Date.now()
+                },
+                {
+                    id: 'sample2',
+                    platform: 'twitter',
+                    title: 'Twitter',
+                    subtitle: '最新情報をツイート',
+                    url: 'https://twitter.com',
+                    icon: '🐦',
+                    createdAt: Date.now()
+                },
+                {
+                    id: 'sample3',
+                    platform: 'youtube',
+                    title: 'YouTube Channel',
+                    subtitle: '動画をチェック',
+                    url: 'https://youtube.com',
+                    icon: '🎥',
+                    createdAt: Date.now()
+                }
+            ];
+            saveData();
+        }
+    </script>
+</body>
+</html>

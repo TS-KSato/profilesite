@@ -551,75 +551,40 @@
             });
         }
 
-        // タイムラインデータ（JSON形式）
-        const timelineData = [
-            {
-                id: 1,
-                author: "うま恋日記",
-                handle: "@uma_koi",
-                avatar: "profile.png",
-                time: "2時間前",
-                content: "有馬記念2025 大本命発表！コントレイルの全弟に注目。血統と近況から見て、これは来る！データ的にも完璧な条件が揃いました。 #有馬記念 #競馬予想",
-                likes: 24,
-                retweets: 8,
-                comments: 12
-            },
-            {
-                id: 2,
-                author: "うま恋日記",
-                handle: "@uma_koi",
-                avatar: "profile.png",
-                time: "1日前",
-                content: "阪神11R 三連単 見事的中！パドックでの歩様チェックが決め手でした。1番人気を軸に、穴馬2頭をキャッチ。配当は93,840円！ #競馬 #的中",
-                likes: 45,
-                retweets: 23,
-                comments: 19
-            },
-            {
-                id: 3,
-                author: "うま恋日記",
-                handle: "@uma_koi",
-                avatar: "profile.png",
-                time: "3日前",
-                content: "今週末の雨予報を受けて、重馬場での種牡馬別成績を調査中。ディープインパクト産駒の成績が気になるところ...🤔 重馬場での勝率は11.2%（良馬場15.8%）という結果に。",
-                likes: 18,
-                retweets: 6,
-                comments: 8
-            }
-        ];
 
-        // タイムライン読み込み
-        async function loadTimeline() {
-            const container = document.getElementById('timeline-container');
-            if (!container) return;
 
-            // ローディング表示
-            container.innerHTML = `
-                <div class="loading">
-                    <div class="spinner"></div>
-                    読み込み中...
-                </div>
-            `;
+// タイムライン読み込み
+async function loadTimeline() {
+    const container = document.getElementById('timeline-container');
+    if (!container) return;
 
-            try {
-                // 実際の実装では外部JSONから取得
-                // const response = await fetch('timeline.json');
-                // const data = await response.json();
-                
-                await new Promise(resolve => setTimeout(resolve, 800));
-                const data = timelineData;
+    // ローディング表示
+    container.innerHTML = `
+        <div class="loading">
+            <div class="spinner"></div>
+            読み込み中...
+        </div>
+    `;
 
-                displayTimeline(data.slice(0, 3)); // 最新3件表示
-            } catch (error) {
-                console.error('タイムライン読み込みエラー:', error);
-                container.innerHTML = `
-                    <div style="text-align: center; padding: var(--space-lg); color: var(--text-muted);">
-                        読み込みに失敗しました。
-                        <button onclick="loadTimeline()" style="margin-left: var(--space-xs); color: var(--primary); cursor: pointer; background: none; border: none;">再試行</button>
-                    </div>
-                `;
-            }
+    try {
+        const response = await fetch('timeline.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+        const data = await response.json();
+
+        const sortedData = data.sort((a, b) => b.id - a.id);
+displayTimeline(sortedData.slice(0, 3));
+    } catch (error) {
+        console.error('タイムライン読み込みエラー:', error);
+        container.innerHTML = `
+            <div style="text-align: center; padding: var(--space-lg); color: var(--text-muted);">
+                読み込みに失敗しました。
+                <button onclick="loadTimeline()" style="margin-left: var(--space-xs); color: var(--primary); cursor: pointer; background: none; border: none;">再試行</button>
+            </div>
+        `;
+    }
+}
 
         // タイムライン表示
         function displayTimeline(posts) {

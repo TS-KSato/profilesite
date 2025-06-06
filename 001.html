@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>うま恋日記 – Sexy Turf Profile</title>
-    <meta name="description" content="競馬場の芝のように瑞々しいグリーンを基調にしたプロフィールページ。週末のレースを彩る気まぐれな予想と感想を綴ります。">
+    <title>うま恋日記</title>
+    <meta name="description" content="競馬のある週末が好きです。パドックでの一瞬の表情や、静かな直線の駆け引きに惹かれます。データも直感も大切に、気ままに予想や感想を綴ります。">
     <meta name="robots" content="index,follow">
     <meta name="theme-color" content="#46a049">
 
     <!-- Open Graph / Twitter Card -->
     <meta property="og:title" content="うま恋日記 – Sexy Turf Profile">
-    <meta property="og:description" content="芝色を基調にした競馬×大人のプロフィール。">
+    <meta property="og:description" content="競馬のある週末が好きです。パドックでの一瞬の表情や、静かな直線の駆け引きに惹かれます。データも直感も大切に、気ままに予想や感想を綴ります。">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://example.com/">
     <meta property="og:image" content="/og-image.png">
@@ -45,12 +45,13 @@
         #compliance{background:#fafafa;font-size:.75rem;color:#555;text-align:center;padding:2rem 1rem;margin-top:4rem;}
         #compliance a{color:var(--turf-green-dark);text-decoration:none;}
         #compliance a:hover{text-decoration:underline;}
+        #stats{font-size:.9rem;text-align:center;color:var(--turf-green-dark);margin-top:1rem;}
     </style>
 </head>
 <body>
     <header>
         <h1>うま恋日記</h1>
-        <p>芝の香りと情熱と—週末のレースを彩る大人のプロフィール</p>
+        <p>競馬のある週末が好きです。パドックでの一瞬の表情や、静かな直線の駆け引きに惹かれます。データも直感も大切に、気ままに予想や感想を綴ります。</p>
         <img src="profile.png" alt="プロフィール写真" class="profile-img">
     </header>
 
@@ -82,8 +83,38 @@
 
     <footer id="compliance" role="contentinfo">
         <p class="copyright">© 2025 うま恋日記&nbsp;All&nbsp;Rights&nbsp;Reserved.</p>
-        <p class="legal">当サイトは18歳未満の方の閲覧・利用を禁止しています。掲載コンテンツはフィクションであり、実在の人物・団体とは関係ありません。</p>
-        <p class="links"><a href="/terms.html">利用規約</a> | <a href="/privacy.html">プライバシーポリシー</a> | <a href="mailto:info@example.com">お問い合わせ</a></p>
+        <p class="legal">※ 掲載されている予想は個人の見解であり、的中を保証するものではありません。投票は自己責任でお願いします。</p>
+        <div id="stats" aria-live="polite">
+            総閲覧数: <span id="viewCounter">--</span> ／ 総リンククリック数: <span id="linkCounter">--</span>
+        </div>
     </footer>
+
+    <script>
+    // 簡易フロントエンドカウンター (ローカルストレージ)
+    document.addEventListener('DOMContentLoaded',()=>{
+        const viewKey='sexyProfile_totalViews';
+        const linkKey='sexyProfile_linkClicks';
+
+        // 閲覧数を+1
+        const views=(parseInt(localStorage.getItem(viewKey)||'0',10)+1);
+        localStorage.setItem(viewKey,views);
+
+        // クリック数は読み出すだけ
+        const links=parseInt(localStorage.getItem(linkKey)||'0',10);
+
+        // 画面に表示
+        document.getElementById('viewCounter').textContent=views.toLocaleString();
+        document.getElementById('linkCounter').textContent=links.toLocaleString();
+
+        // すべてのリンクにクリックカウント
+        document.querySelectorAll('a').forEach(a=>{
+            a.addEventListener('click',()=>{
+                const newLinks=parseInt(localStorage.getItem(linkKey)||'0',10)+1;
+                localStorage.setItem(linkKey,newLinks);
+                document.getElementById('linkCounter').textContent=newLinks.toLocaleString();
+            },{passive:true});
+        });
+    });
+    </script>
 </body>
 </html>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>うま恋日記</title>
-    <meta name="description" content="競馬予想インフルエンサー専用プロフィールリンク集約サービス">
+    <meta name="description" content="競馬のある週末が好きです。パドックでの一瞬の表情や、静かな直線の駆け引きに惹かれます。データも直感も大切に、気ままに予想や感想を綴ります。#競馬好きと繋がりたい">
     
     <!-- Accessibility improvements -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -747,6 +747,107 @@
             color: var(--text-inverse);
         }
 
+        /* GitHub Integration Section */
+        .github-info {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .github-instructions {
+            margin-top: 20px;
+        }
+
+        .github-instructions h3 {
+            font-size: var(--font-xl);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .github-instructions h4 {
+            font-size: var(--font-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 20px 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .code-block {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            font-size: var(--font-sm);
+            line-height: 1.4;
+            color: var(--text-primary);
+        }
+
+        .code-block code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+            font-size: inherit;
+        }
+
+        code {
+            background: var(--bg-secondary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: var(--primary-color);
+        }
+
+        .github-tips {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .github-tips ol {
+            margin: 12px 0 12px 20px;
+            color: var(--text-secondary);
+        }
+
+        .github-tips li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .icon-grid span {
+            background: var(--bg-primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: var(--font-sm);
+            text-align: center;
+        }
+
         /* Add link button */
         .add-link-btn {
             width: 100%;
@@ -876,6 +977,28 @@
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
             }
         }
 
@@ -1014,6 +1137,71 @@
                 
                 <div id="predictions-container" role="region" aria-label="予想一覧">
                     <!-- Predictions will be dynamically inserted here -->
+                </div>
+            </section>
+
+            <!-- GitHub Integration Info (Admin Only) -->
+            <section class="github-info admin-only loading" aria-labelledby="github-heading">
+                <div class="section-header">
+                    <h2 id="github-heading" class="section-title">
+                        📁 GitHub連携設定
+                    </h2>
+                    <button class="add-prediction-btn" onclick="refreshFromGitHub()" aria-label="GitHubから最新データを取得">
+                        🔄 更新
+                    </button>
+                </div>
+                
+                <div class="github-instructions">
+                    <h3>📝 predictions.json の作成方法</h3>
+                    <p>GitHub Pages のルートディレクトリに <code>predictions.json</code> ファイルを作成してください：</p>
+                    
+                    <div class="code-block">
+                        <pre><code>{
+  "predictions": [
+    {
+      "date": "2025-06-15",
+      "venue": "東京",
+      "race": "11R",
+      "raceName": "日本ダービー",
+      "confidence": 4,
+      "bets": [
+        {"type": "馬連", "numbers": "13-17", "percentage": 50},
+        {"type": "馬単", "numbers": "13→17", "percentage": 20},
+        {"type": "ワイド", "numbers": "2-13", "percentage": 15},
+        {"type": "3連複", "numbers": "2-13-17", "percentage": 15}
+      ],
+      "horses": [
+        {"number": 13, "name": "フォルティス", "icon": "🎯", "comment": "能力最上位、距離延長◎"},
+        {"number": 17, "name": "メテオライト", "icon": "⚡", "comment": "上がり勝負向きで対抗"}
+      ],
+      "strategy": "平均～ややスロー、先行有利",
+      "comment": "追加コメントがあれば記載",
+      "result": null,
+      "resultComment": ""
+    }
+  ]
+}</code></pre>
+                    </div>
+                    
+                    <div class="github-tips">
+                        <h4>💡 更新手順</h4>
+                        <ol>
+                            <li>GitHub上で <code>predictions.json</code> を編集</li>
+                            <li>変更をコミット・プッシュ</li>
+                            <li>GitHub Pagesで自動デプロイ（数分で反映）</li>
+                            <li>このページで「🔄 更新」ボタンをクリック</li>
+                        </ol>
+                        
+                        <h4>📋 アイコン一覧</h4>
+                        <div class="icon-grid">
+                            <span>🎯 本命</span>
+                            <span>⚡ 対抗</span>
+                            <span>📈 穴馬</span>
+                            <span>🔥 注目</span>
+                            <span>💎 隠れた実力</span>
+                            <span>🌟 期待</span>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -1259,12 +1447,24 @@
         };
 
         // Initialize app
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             loadData();
             renderProfile();
+            
+            // Try to load predictions from GitHub first
+            const githubLoaded = await loadPredictionsFromGitHub();
+            if (!githubLoaded && predictionsData.length === 0) {
+                addSamplePredictions();
+            }
+            
             renderPredictions();
             renderLinks();
             updateStats();
+            
+            // Add sample links if empty
+            if (linksData.length === 0) {
+                addSampleLinks();
+            }
             
             // Increment view count
             analyticsData.totalViews++;
@@ -1279,14 +1479,6 @@
                     }, index * 100);
                 });
             }, 100);
-
-            // Add sample data if empty
-            if (predictionsData.length === 0) {
-                addSamplePredictions();
-            }
-            if (linksData.length === 0) {
-                addSampleLinks();
-            }
         });
 
         // Accessibility functions
@@ -1966,7 +2158,83 @@
             document.getElementById('total-views').textContent = analyticsData.totalViews;
         }
 
-        // Sample data
+        // GitHub integration functions
+        async function loadPredictionsFromGitHub() {
+            try {
+                // Try to load from GitHub first
+                const response = await fetch('./predictions.json');
+                if (response.ok) {
+                    const githubData = await response.json();
+                    if (githubData.predictions && githubData.predictions.length > 0) {
+                        predictionsData = convertGitHubDataToInternal(githubData.predictions);
+                        saveData();
+                        renderPredictions();
+                        updateStats();
+                        console.log('✅ GitHub予想データを読み込みました');
+                        return true;
+                    }
+                }
+            } catch (error) {
+                console.log('ℹ️ GitHub予想データが見つかりません。サンプルデータを使用します。');
+            }
+            
+            // Fallback to sample data
+            addSamplePredictions();
+            return false;
+        }
+
+        function convertGitHubDataToInternal(githubPredictions) {
+            return githubPredictions.map(pred => ({
+                id: generateId(),
+                raceDate: pred.date,
+                venue: pred.venue,
+                raceNumber: pred.race.replace('R', ''),
+                raceName: pred.raceName,
+                confidence: pred.confidence || 3,
+                content: formatGitHubPrediction(pred),
+                createdAt: new Date(pred.date).getTime(),
+                result: pred.result || null,
+                resultComment: pred.resultComment || '',
+                githubFormat: true,
+                originalData: pred
+            }));
+        }
+
+        function formatGitHubPrediction(pred) {
+            let content = '';
+            
+            // 買い目情報
+            if (pred.bets && pred.bets.length > 0) {
+                content += '📊 買い目配分\n';
+                pred.bets.forEach(bet => {
+                    content += `${bet.type} ${bet.numbers} ${bet.percentage}%\n`;
+                });
+                content += '\n';
+            }
+            
+            // 馬の評価
+            if (pred.horses && pred.horses.length > 0) {
+                content += '🏇 注目馬\n';
+                pred.horses.forEach(horse => {
+                    content += `${horse.icon || '🐎'}${horse.number}${horse.name ? horse.name : '番'}──${horse.comment}\n`;
+                });
+                content += '\n';
+            }
+            
+            // 展開予想
+            if (pred.strategy) {
+                content += `📈展開：${pred.strategy}\n\n`;
+            }
+            
+            // 追加コメント
+            if (pred.comment) {
+                content += pred.comment;
+            }
+            
+            return content.trim();
+        }
+
+        // Sample data (fallback)
         function addSamplePredictions() {
             const today = new Date();
             const tomorrow = new Date(today);
@@ -1978,21 +2246,22 @@
                     raceDate: tomorrow.toISOString().split('T')[0],
                     venue: '東京',
                     raceNumber: '11',
-                    raceName: '東京大賞典',
+                    raceName: '日本ダービー',
                     confidence: 4,
-                    content: '本命: 5番 ◯◯◯◯\n対抗: 3番 △△△△\n穴馬: 8番 ××××\n\n東京大賞典は例年波乱が多いレースですが、今年は5番が中心。前走の内容が抜けており、距離適性も申し分なし。3番は安定感抜群で連対候補筆頭。8番は人気薄ながら末脚に光るものがあり、3着狙いで面白い存在。',
+                    content: '📊 買い目配分\n馬連 13-17 50%\n馬単 13→17 20%\nワイド 2-13 15%\n3連複 2-13-17 15%\n\n🏇 注目馬\n🎯13フォルティス──能力最上位、距離延長◎\n⚡17メテオライト──上がり勝負向きで対抗\n\n📈展開：平均～ややスロー、先行有利',
                     createdAt: Date.now() - 3600000,
-                    result: 'hit',
-                    resultComment: '本命5番が見事に勝利！予想通りの展開でした。'
+                    githubFormat: true
                 },
                 {
                     id: 'sample-pred-2',
                     raceDate: today.toISOString().split('T')[0],
                     venue: '中山',
                     raceNumber: '9',
+                    raceName: '朱雀ステークス',
                     confidence: 3,
-                    content: '本命: 2番 ●●●●\n対抗: 7番 ▲▲▲▲\n\n中山9Rは2番を軸に組み立て。前走の負け方に好材料が多く、今回は巻き返しが期待できる。7番は実績上位で安定感がある。',
-                    createdAt: Date.now() - 7200000
+                    content: '📊 買い目配分\n馬連 2-7 60%\n3連複 2-6-7 40%\n\n🏇 注目馬\n🎯2番ライトニング──前走の負け方◎\n📈7番スターダスト──実績上位で安定感\n\n📈展開：ハイペース想定、差し有利',
+                    createdAt: Date.now() - 7200000,
+                    githubFormat: true
                 }
             ];
             saveData();

@@ -3,35 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyLinks - プロフィールリンク集約サービス</title>
+    <title>競馬予想師プロフィール - HorseLinks</title>
+    <meta name="description" content="競馬予想インフルエンサー専用プロフィールリンク集約サービス">
+    
+    <!-- Accessibility improvements -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
+        /* Universal Design Variables */
+        :root {
+            /* Enhanced color contrast ratios (WCAG AA compliant) */
+            --primary-color: #2563eb;
+            --secondary-color: #1d4ed8;
+            --accent-color: #dc2626;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --danger-color: #dc2625;
+            
+            /* High contrast text colors */
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --text-muted: #6b7280;
+            --text-inverse: #ffffff;
+            
+            /* Background colors with proper contrast */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-tertiary: #f3f4f6;
+            --bg-overlay: rgba(0, 0, 0, 0.5);
+            
+            /* Horse racing theme gradients */
+            --horse-gradient-1: #1e40af;
+            --horse-gradient-2: #7c3aed;
+            --track-gradient-1: #059669;
+            --track-gradient-2: #0d9488;
+            
+            /* Shadows with better visibility */
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+            
+            /* Border and spacing */
+            --border-color: #e5e7eb;
+            --border-focus: #3b82f6;
+            --border-error: #ef4444;
+            
+            /* Font sizes - accessible scaling */
+            --font-xs: 0.75rem;
+            --font-sm: 0.875rem;
+            --font-base: 1rem;
+            --font-lg: 1.125rem;
+            --font-xl: 1.25rem;
+            --font-2xl: 1.5rem;
+            --font-3xl: 1.875rem;
+            --font-4xl: 2.25rem;
+            
+            /* High contrast mode support */
+            --focus-ring: 0 0 0 3px rgba(59, 130, 246, 0.5);
+        }
+
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+            :root {
+                --text-primary: #000000;
+                --text-secondary: #333333;
+                --bg-primary: #ffffff;
+                --border-color: #000000;
+                --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.8);
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Reset and base styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --bg-gradient-1: #667eea;
-            --bg-gradient-2: #764ba2;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --card-shadow: rgba(0, 0, 0, 0.1);
-            --text-primary: #2d3748;
-            --text-secondary: #718096;
-            --accent-color: #667eea;
-            --success-color: #48bb78;
-            --danger-color: #f56565;
-            --border-color: rgba(255, 255, 255, 0.2);
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 100%);
-            min-height: 100vh;
+            font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            font-size: var(--font-base);
+            line-height: 1.6;
             color: var(--text-primary);
+            background: linear-gradient(135deg, var(--horse-gradient-1) 0%, var(--horse-gradient-2) 100%);
+            min-height: 100vh;
             overflow-x: hidden;
         }
 
+        /* Skip to content link for screen readers */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--primary-color);
+            color: var(--text-inverse);
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 10000;
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+            top: 6px;
+        }
+
+        /* Font size controls */
+        .accessibility-controls {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            display: flex;
+            gap: 8px;
+            background: var(--bg-primary);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .font-control {
+            background: var(--primary-color);
+            color: var(--text-inverse);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .font-control:hover, .font-control:focus {
+            background: var(--secondary-color);
+            outline: 2px solid var(--border-focus);
+            outline-offset: 2px;
+        }
+
+        /* Container with proper landmarks */
         .container {
             max-width: 480px;
             margin: 0 auto;
@@ -39,88 +160,41 @@
             position: relative;
         }
 
-        /* Floating Particles Background */
-        .bg-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
-            50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
-        }
-
-        /* Main Content */
-        .main-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Admin Toggle */
+        /* Admin toggle with improved accessibility */
         .admin-toggle {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 1000;
-            background: var(--card-bg);
-            border: none;
-            border-radius: 50px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
             padding: 12px 20px;
-            box-shadow: 0 4px 15px var(--card-shadow);
+            box-shadow: var(--shadow-md);
             cursor: pointer;
             font-weight: 600;
-            color: var(--accent-color);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(10px);
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+            font-size: var(--font-sm);
         }
 
-        .admin-toggle:hover {
+        .admin-toggle:hover, .admin-toggle:focus {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px var(--card-shadow);
+            box-shadow: var(--shadow-lg);
+            outline: 2px solid var(--border-focus);
+            outline-offset: 2px;
         }
 
-        /* Profile Card */
+        /* Profile card with semantic structure */
         .profile-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 20px 40px var(--card-shadow);
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 32px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-lg);
             border: 1px solid var(--border-color);
             text-align: center;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .profile-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .profile-card:hover::before {
-            left: 100%;
+            transition: all 0.3s ease;
         }
 
         .profile-avatar {
@@ -128,141 +202,341 @@
             height: 120px;
             border-radius: 50%;
             margin: 0 auto 20px;
-            background: linear-gradient(135deg, var(--bg-gradient-1), var(--bg-gradient-2));
+            background: linear-gradient(135deg, var(--horse-gradient-1), var(--horse-gradient-2));
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: var(--text-inverse);
             font-size: 48px;
             font-weight: bold;
-            position: relative;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            box-shadow: var(--shadow-md);
+            position: relative;
         }
 
-        .profile-avatar:hover {
+        .profile-avatar:hover, .profile-avatar:focus {
             transform: scale(1.05);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
-        }
-
-        .profile-avatar input[type="file"] {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-            border-radius: 50%;
+            box-shadow: var(--shadow-lg);
+            outline: 3px solid var(--border-focus);
+            outline-offset: 3px;
         }
 
         .profile-name {
-            font-size: 28px;
+            font-size: var(--font-3xl);
             font-weight: 700;
             margin-bottom: 8px;
-            background: linear-gradient(135deg, var(--bg-gradient-1), var(--bg-gradient-2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--text-primary);
         }
 
         .profile-description {
             color: var(--text-secondary);
-            font-size: 16px;
+            font-size: var(--font-lg);
             line-height: 1.6;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
+        /* Enhanced stats with racing metrics */
         .profile-stats {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 24px;
         }
 
         .stat-item {
+            background: var(--bg-secondary);
+            padding: 16px;
+            border-radius: 12px;
             text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background: var(--bg-tertiary);
+            transform: translateY(-2px);
         }
 
         .stat-number {
-            font-size: 24px;
+            font-size: var(--font-2xl);
             font-weight: 700;
-            color: var(--accent-color);
+            color: var(--primary-color);
             display: block;
         }
 
         .stat-label {
-            font-size: 12px;
+            font-size: var(--font-xs);
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 1px;
+            margin-top: 4px;
         }
 
-        /* Links Container */
+        /* Racing performance indicators */
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .performance-item {
+            background: var(--bg-primary);
+            padding: 16px 12px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .performance-number {
+            font-size: var(--font-xl);
+            font-weight: 700;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .performance-number.positive { color: var(--success-color); }
+        .performance-number.negative { color: var(--danger-color); }
+        .performance-number.neutral { color: var(--primary-color); }
+
+        .performance-label {
+            font-size: var(--font-xs);
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Prediction comments section */
+        .predictions-section {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: var(--font-2xl);
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .add-prediction-btn {
+            background: var(--success-color);
+            color: var(--text-inverse);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: var(--font-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-prediction-btn:hover, .add-prediction-btn:focus {
+            background: var(--warning-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            outline: 2px solid var(--border-focus);
+            outline-offset: 2px;
+        }
+
+        /* Individual prediction cards */
+        .prediction-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .prediction-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .prediction-card.hit {
+            border-left: 4px solid var(--success-color);
+            background: linear-gradient(90deg, rgba(5, 150, 105, 0.1) 0%, var(--bg-secondary) 10%);
+        }
+
+        .prediction-card.miss {
+            border-left: 4px solid var(--danger-color);
+            background: linear-gradient(90deg, rgba(220, 38, 38, 0.1) 0%, var(--bg-secondary) 10%);
+        }
+
+        .prediction-card.pending {
+            border-left: 4px solid var(--warning-color);
+            background: linear-gradient(90deg, rgba(217, 119, 6, 0.1) 0%, var(--bg-secondary) 10%);
+        }
+
+        .prediction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .race-info {
+            flex: 1;
+        }
+
+        .race-title {
+            font-size: var(--font-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .race-details {
+            font-size: var(--font-sm);
+            color: var(--text-secondary);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .race-tag {
+            background: var(--primary-color);
+            color: var(--text-inverse);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: var(--font-xs);
+            font-weight: 500;
+        }
+
+        .confidence-level {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: var(--font-sm);
+            font-weight: 600;
+        }
+
+        .confidence-stars {
+            color: var(--warning-color);
+        }
+
+        .prediction-content {
+            margin: 16px 0;
+            padding: 16px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .prediction-text {
+            font-size: var(--font-base);
+            line-height: 1.7;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+        }
+
+        .prediction-footer {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .prediction-meta {
+            font-size: var(--font-sm);
+            color: var(--text-muted);
+            flex: 1;
+        }
+
+        .prediction-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: var(--font-xs);
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover, .action-btn:focus {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            outline: 2px solid var(--border-focus);
+            outline-offset: 1px;
+        }
+
+        .action-btn.edit { border-color: var(--primary-color); color: var(--primary-color); }
+        .action-btn.delete { border-color: var(--danger-color); color: var(--danger-color); }
+        .action-btn.result { border-color: var(--success-color); color: var(--success-color); }
+
+        /* Links with racing platform options */
         .links-container {
-            margin-bottom: 30px;
+            margin-bottom: 24px;
         }
 
         .link-item {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border-radius: 16px;
-            margin-bottom: 16px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            margin-bottom: 12px;
             border: 1px solid var(--border-color);
             overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             position: relative;
-            cursor: pointer;
         }
 
-        .link-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 15px 35px var(--card-shadow);
-        }
-
-        .link-item.sortable-ghost {
-            opacity: 0.5;
+        .link-item:hover, .link-item:focus-within {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .link-button {
             display: flex;
             align-items: center;
-            padding: 20px;
+            padding: 16px;
             text-decoration: none;
             color: var(--text-primary);
             width: 100%;
             border: none;
             background: none;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
+            transition: all 0.3s ease;
         }
 
-        .link-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .link-button:hover::before {
-            left: 100%;
+        .link-button:focus {
+            outline: 2px solid var(--border-focus);
+            outline-offset: 2px;
         }
 
         .link-icon {
             width: 48px;
             height: 48px;
-            border-radius: 12px;
+            border-radius: 8px;
             margin-right: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: var(--font-xl);
             flex-shrink: 0;
-            position: relative;
+            border: 1px solid var(--border-color);
         }
 
         .link-content {
@@ -271,18 +545,19 @@
         }
 
         .link-title {
-            font-size: 18px;
+            font-size: var(--font-lg);
             font-weight: 600;
             margin-bottom: 4px;
+            color: var(--text-primary);
         }
 
         .link-subtitle {
             color: var(--text-secondary);
-            font-size: 14px;
+            font-size: var(--font-sm);
         }
 
         .link-arrow {
-            font-size: 18px;
+            font-size: var(--font-lg);
             color: var(--text-secondary);
             transition: transform 0.3s ease;
         }
@@ -291,77 +566,25 @@
             transform: translateX(4px);
         }
 
-        .link-controls {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            display: none;
-            gap: 8px;
-        }
+        /* Racing platform specific styles */
+        .link-jra { background: linear-gradient(135deg, #1e40af, #3b82f6); }
+        .link-netkeiba { background: linear-gradient(135deg, #059669, #10b981); }
+        .link-klan { background: linear-gradient(135deg, #dc2626, #ef4444); }
+        .link-keibai { background: linear-gradient(135deg, #7c3aed, #a855f7); }
+        .link-youtube { background: linear-gradient(135deg, #dc2626, #ef4444); }
+        .link-twitter { background: linear-gradient(135deg, #1d4ed8, #3b82f6); }
+        .link-note { background: linear-gradient(135deg, #059669, #10b981); }
+        .link-blog { background: linear-gradient(135deg, #ea580c, #f97316); }
 
-        .link-item:hover .link-controls {
-            display: flex;
-        }
-
-        .control-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            transition: all 0.2s ease;
-        }
-
-        .edit-btn {
-            background: var(--accent-color);
-            color: white;
-        }
-
-        .delete-btn {
-            background: var(--danger-color);
-            color: white;
-        }
-
-        .control-btn:hover {
-            transform: scale(1.1);
-        }
-
-        /* Add Link Button */
-        .add-link-btn {
-            width: 100%;
-            padding: 20px;
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 2px dashed var(--border-color);
-            border-radius: 16px;
-            color: var(--accent-color);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
-        }
-
-        .add-link-btn:hover {
-            border-color: var(--accent-color);
-            background: rgba(102, 126, 234, 0.05);
-            transform: translateY(-2px);
-        }
-
-        /* Modal */
+        /* Modal improvements */
         .modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            z-index: 2000;
+            background: var(--bg-overlay);
+            z-index: 3000;
             display: none;
             align-items: center;
             justify-content: center;
@@ -373,25 +596,15 @@
         }
 
         .modal-content {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 30px;
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 32px;
             width: 100%;
-            max-width: 400px;
+            max-width: 480px;
             border: 1px solid var(--border-color);
-            animation: modalSlideIn 0.3s ease;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            box-shadow: var(--shadow-lg);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .modal-header {
@@ -402,23 +615,33 @@
         }
 
         .modal-title {
-            font-size: 20px;
+            font-size: var(--font-2xl);
             font-weight: 700;
+            color: var(--text-primary);
         }
 
         .close-btn {
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: var(--font-2xl);
             cursor: pointer;
             color: var(--text-secondary);
-            transition: color 0.2s ease;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
         }
 
-        .close-btn:hover {
+        .close-btn:hover, .close-btn:focus {
+            background: var(--bg-secondary);
             color: var(--text-primary);
+            outline: 2px solid var(--border-focus);
         }
 
+        /* Enhanced form controls */
         .form-group {
             margin-bottom: 20px;
         }
@@ -428,54 +651,78 @@
             margin-bottom: 8px;
             font-weight: 600;
             color: var(--text-primary);
+            font-size: var(--font-sm);
         }
 
         .form-input, .form-select, .form-textarea {
             width: 100%;
             padding: 12px 16px;
             border: 2px solid var(--border-color);
-            border-radius: 12px;
-            font-size: 16px;
-            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            font-size: var(--font-base);
+            background: var(--bg-primary);
+            color: var(--text-primary);
             transition: all 0.3s ease;
+            font-family: inherit;
         }
 
         .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: var(--border-focus);
+            box-shadow: var(--focus-ring);
+        }
+
+        .form-input:invalid, .form-select:invalid, .form-textarea:invalid {
+            border-color: var(--border-error);
         }
 
         .form-textarea {
-            min-height: 80px;
+            min-height: 120px;
             resize: vertical;
+            line-height: 1.6;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
         }
 
         .form-buttons {
             display: flex;
             gap: 12px;
-            margin-top: 24px;
+            margin-top: 32px;
         }
 
         .btn {
             flex: 1;
-            padding: 12px 24px;
+            padding: 14px 24px;
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: var(--font-base);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:focus {
+            outline: 2px solid var(--border-focus);
+            outline-offset: 2px;
         }
 
         .btn-primary {
-            background: var(--accent-color);
-            color: white;
+            background: var(--primary-color);
+            color: var(--text-inverse);
         }
 
-        .btn-primary:hover {
-            background: #5a67d8;
+        .btn-primary:hover, .btn-primary:focus {
+            background: var(--secondary-color);
             transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .btn-secondary {
@@ -484,178 +731,154 @@
             border: 2px solid var(--border-color);
         }
 
-        .btn-secondary:hover {
+        .btn-secondary:hover, .btn-secondary:focus {
             color: var(--text-primary);
             border-color: var(--text-secondary);
+            background: var(--bg-secondary);
         }
 
-        /* QR Code Section */
-        .qr-section {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 30px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-            margin-bottom: 30px;
-        }
-
-        .qr-code {
-            width: 200px;
-            height: 200px;
-            margin: 20px auto;
-            background: white;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 30px var(--card-shadow);
-        }
-
-        /* Share Button */
-        .share-btn {
+        .btn-success {
             background: var(--success-color);
-            color: white;
-            border: none;
+            color: var(--text-inverse);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: var(--text-inverse);
+        }
+
+        /* Add link button */
+        .add-link-btn {
+            width: 100%;
+            padding: 20px;
+            background: var(--bg-primary);
+            border: 2px dashed var(--border-color);
             border-radius: 12px;
-            padding: 16px 24px;
-            font-size: 16px;
+            color: var(--primary-color);
+            font-size: var(--font-base);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            width: 100%;
             margin-bottom: 20px;
         }
 
-        .share-btn:hover {
-            background: #38a169;
+        .add-link-btn:hover, .add-link-btn:focus {
+            border-color: var(--primary-color);
+            background: var(--bg-secondary);
             transform: translateY(-2px);
+            outline: 2px solid var(--border-focus);
+            outline-offset: 2px;
         }
 
-        /* Analytics Panel */
-        .analytics-panel {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 30px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 30px;
+        /* Screen reader only content */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
 
-        .analytics-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-align: center;
+        /* Focus visible improvements */
+        .focus-visible {
+            outline: 2px solid var(--border-focus);
+            outline-offset: 2px;
         }
 
-        .analytics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 20px;
-        }
-
-        .analytics-item {
-            text-align: center;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-        }
-
-        .analytics-number {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--accent-color);
-            display: block;
-        }
-
-        .analytics-label {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-top: 8px;
-        }
-
-        /* Theme Selector */
-        .theme-selector {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .theme-option {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            cursor: pointer;
-            border: 3px solid transparent;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .theme-option.active {
-            border-color: var(--accent-color);
-            transform: scale(1.1);
-        }
-
-        .theme-option:hover {
-            transform: scale(1.05);
-        }
-
-        /* Predefined link styles */
-        .link-instagram { background: linear-gradient(135deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); color: white; }
-        .link-twitter { background: #1da1f2; color: white; }
-        .link-youtube { background: #ff0000; color: white; }
-        .link-tiktok { background: linear-gradient(135deg, #ff0050, #00f2ea); color: white; }
-        .link-linkedin { background: #0077b5; color: white; }
-        .link-github { background: #333; color: white; }
-        .link-website { background: linear-gradient(135deg, var(--bg-gradient-1), var(--bg-gradient-2)); color: white; }
-        .link-spotify { background: #1db954; color: white; }
-        .link-discord { background: #7289da; color: white; }
-        .link-custom { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
-
-        /* Mobile Optimizations */
-        @media (max-width: 480px) {
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
             .container {
-                padding: 15px;
-            }
-            
-            .profile-card {
-                padding: 30px 20px;
-            }
-            
-            .profile-avatar {
-                width: 100px;
-                height: 100px;
-                font-size: 40px;
-            }
-            
-            .profile-name {
-                font-size: 24px;
-            }
-            
-            .link-button {
                 padding: 16px;
             }
             
-            .link-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
+            .accessibility-controls {
+                position: relative;
+                top: auto;
+                left: auto;
+                margin-bottom: 16px;
+                justify-content: center;
             }
             
-            .link-title {
-                font-size: 16px;
+            .admin-toggle {
+                top: 16px;
+                right: 16px;
+                padding: 10px 16px;
+                font-size: var(--font-sm);
+            }
+            
+            .profile-stats {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .performance-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
             }
             
             .modal-content {
-                margin: 20px;
                 padding: 24px;
+                margin: 16px;
+            }
+            
+            .prediction-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .prediction-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
             }
         }
 
-        /* Admin-only elements */
+        /* Print styles */
+        @media print {
+            .admin-toggle,
+            .accessibility-controls,
+            .add-prediction-btn,
+            .add-link-btn,
+            .prediction-actions,
+            .admin-only {
+                display: none !important;
+            }
+            
+            body {
+                background: white;
+                color: black;
+            }
+            
+            .profile-card,
+            .predictions-section,
+            .link-item {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+        }
+
+        /* Animation classes */
+        .loading {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .admin-only {
             display: none;
         }
@@ -664,174 +887,285 @@
             display: block;
         }
 
-        .admin-mode .link-controls {
-            display: flex !important;
+        /* Error states */
+        .error-message {
+            color: var(--danger-color);
+            font-size: var(--font-sm);
+            margin-top: 4px;
         }
 
-        /* Loading Animation */
-        .loading {
-            opacity: 0;
-            animation: fadeInUp 0.6s ease forwards;
+        .success-message {
+            color: var(--success-color);
+            font-size: var(--font-sm);
+            margin-top: 4px;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: var(--text-inverse);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: var(--font-sm);
+            white-space: nowrap;
+            z-index: 1000;
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-primary: #f9fafb;
+                --text-secondary: #d1d5db;
+                --text-muted: #9ca3af;
+                --bg-primary: #1f2937;
+                --bg-secondary: #374151;
+                --bg-tertiary: #4b5563;
+                --border-color: #4b5563;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Sortable styles */
-        .sortable-chosen {
-            transform: scale(1.02);
-        }
-
-        .sortable-drag {
-            opacity: 0.8;
-            transform: rotate(2deg);
         }
     </style>
 </head>
 <body>
-    <!-- Background Particles -->
-    <div class="bg-particles" id="particles"></div>
+    <!-- Skip link for accessibility -->
+    <a href="#main-content" class="skip-link">メインコンテンツへスキップ</a>
 
-    <!-- Admin Toggle -->
-    <button class="admin-toggle" onclick="toggleAdmin()">
+    <!-- Accessibility controls -->
+    <div class="accessibility-controls" role="region" aria-label="アクセシビリティ設定">
+        <button class="font-control" onclick="adjustFontSize(-1)" aria-label="文字サイズを小さく" title="文字サイズを小さく">A-</button>
+        <button class="font-control" onclick="adjustFontSize(0)" aria-label="文字サイズをリセット" title="文字サイズをリセット">A</button>
+        <button class="font-control" onclick="adjustFontSize(1)" aria-label="文字サイズを大きく" title="文字サイズを大きく">A+</button>
+    </div>
+
+    <!-- Admin toggle -->
+    <button class="admin-toggle" onclick="toggleAdmin()" aria-label="管理モード切り替え">
         <span id="admin-text">管理モード</span>
     </button>
 
     <div class="container">
-        <div class="main-content">
-            <!-- Profile Card -->
-            <div class="profile-card loading">
-                <div class="profile-avatar" onclick="selectAvatar()">
-                    <span id="avatar-text">M</span>
-                    <input type="file" id="avatar-input" accept="image/*" style="display: none;">
+        <main id="main-content" class="main-content">
+            <!-- Profile section -->
+            <section class="profile-card loading" aria-labelledby="profile-heading">
+                <div class="profile-avatar" onclick="selectAvatar()" role="button" tabindex="0" aria-label="プロフィール画像を変更" onkeydown="handleKeyPress(event, selectAvatar)">
+                    <span id="avatar-text" aria-hidden="true">🐎</span>
+                    <input type="file" id="avatar-input" accept="image/*" style="display: none;" aria-describedby="avatar-help">
+                    <span id="avatar-help" class="sr-only">JPEGまたはPNG形式の画像を選択してください</span>
                 </div>
-                <div class="profile-name" contenteditable="false" id="profile-name">My Links</div>
-                <div class="profile-description" contenteditable="false" id="profile-description">
-                    あなたのすべてのリンクを一つの場所に。SNS、ウェブサイト、作品など、簡単にシェアしましょう。
+                
+                <h1 id="profile-heading" class="profile-name" contenteditable="false" id="profile-name" role="heading" aria-level="1">
+                    競馬予想師 山田太郎
+                </h1>
+                
+                <p class="profile-description" contenteditable="false" id="profile-description">
+                    的中率重視の堅実予想で皆様の競馬ライフをサポート。地方・中央問わず幅広く予想を提供しています。
+                </p>
+
+                <!-- Racing performance stats -->
+                <div class="performance-grid" role="region" aria-label="予想成績">
+                    <div class="performance-item">
+                        <span class="performance-number positive" id="hit-rate">68.5%</span>
+                        <div class="performance-label">的中率</div>
+                    </div>
+                    <div class="performance-item">
+                        <span class="performance-number positive" id="roi">+245</span>
+                        <div class="performance-label">収支</div>
+                    </div>
+                    <div class="performance-item">
+                        <span class="performance-number neutral" id="total-races">156</span>
+                        <div class="performance-label">総レース数</div>
+                    </div>
+                    <div class="performance-item">
+                        <span class="performance-number positive" id="streak">8</span>
+                        <div class="performance-label">連勝記録</div>
+                    </div>
                 </div>
-                <div class="profile-stats">
+
+                <div class="profile-stats" role="region" aria-label="統計情報">
                     <div class="stat-item">
                         <span class="stat-number" id="total-links">0</span>
-                        <span class="stat-label">Links</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="total-clicks">0</span>
-                        <span class="stat-label">Clicks</span>
+                        <span class="stat-label">リンク数</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-number" id="total-views">0</span>
-                        <span class="stat-label">Views</span>
+                        <span class="stat-label">総閲覧数</span>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Analytics Panel (Admin Only) -->
-            <div class="analytics-panel admin-only loading">
-                <div class="analytics-title">📊 Analytics</div>
-                <div class="analytics-grid">
-                    <div class="analytics-item">
-                        <span class="analytics-number" id="today-clicks">0</span>
-                        <div class="analytics-label">今日のクリック</div>
-                    </div>
-                    <div class="analytics-item">
-                        <span class="analytics-number" id="weekly-clicks">0</span>
-                        <div class="analytics-label">週間クリック</div>
-                    </div>
-                    <div class="analytics-item">
-                        <span class="analytics-number" id="popular-link">-</span>
-                        <div class="analytics-label">人気リンク</div>
-                    </div>
+            <!-- Predictions section -->
+            <section class="predictions-section loading" aria-labelledby="predictions-heading">
+                <div class="section-header">
+                    <h2 id="predictions-heading" class="section-title">
+                        🏇 最新予想
+                    </h2>
+                    <button class="add-prediction-btn admin-only" onclick="openPredictionModal()" aria-label="新しい予想を追加">
+                        ➕ 予想追加
+                    </button>
                 </div>
-            </div>
+                
+                <div id="predictions-container" role="region" aria-label="予想一覧">
+                    <!-- Predictions will be dynamically inserted here -->
+                </div>
+            </section>
 
-            <!-- Add Link Button (Admin Only) -->
-            <button class="add-link-btn admin-only loading" onclick="openAddLinkModal()">
+            <!-- Add link button (Admin only) -->
+            <button class="add-link-btn admin-only loading" onclick="openAddLinkModal()" aria-label="新しいリンクを追加">
                 ➕ リンクを追加
             </button>
 
-            <!-- Links Container -->
-            <div class="links-container" id="links-container">
-                <!-- Links will be dynamically inserted here -->
-            </div>
-
-            <!-- QR Code Section -->
-            <div class="qr-section loading">
-                <h3 style="margin-bottom: 16px;">📱 QRコードでシェア</h3>
-                <div class="qr-code" id="qr-code">
-                    <canvas id="qr-canvas"></canvas>
+            <!-- Links section -->
+            <section class="links-container" aria-labelledby="links-heading">
+                <h2 id="links-heading" class="sr-only">関連リンク</h2>
+                <div id="links-container" role="list">
+                    <!-- Links will be dynamically inserted here -->
                 </div>
-                <button class="share-btn" onclick="shareProfile()">
-                    🔗 プロフィールをシェア
-                </button>
-            </div>
+            </section>
+        </main>
+    </div>
 
-            <!-- Theme Selector (Admin Only) -->
-            <div class="qr-section admin-only loading">
-                <h3 style="margin-bottom: 16px;">🎨 テーマ選択</h3>
-                <div class="theme-selector">
-                    <div class="theme-option active" style="background: linear-gradient(135deg, #667eea, #764ba2);" onclick="changeTheme('default')"></div>
-                    <div class="theme-option" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);" onclick="changeTheme('sunset')"></div>
-                    <div class="theme-option" style="background: linear-gradient(135deg, #00d2ff, #3a7bd5);" onclick="changeTheme('ocean')"></div>
-                    <div class="theme-option" style="background: linear-gradient(135deg, #2ecc71, #27ae60);" onclick="changeTheme('nature')"></div>
-                    <div class="theme-option" style="background: linear-gradient(135deg, #f093fb, #f5576c);" onclick="changeTheme('pink')"></div>
-                    <div class="theme-option" style="background: linear-gradient(135deg, #4facfe, #00f2fe);" onclick="changeTheme('sky')"></div>
-                </div>
+    <!-- Prediction modal -->
+    <div class="modal" id="prediction-modal" role="dialog" aria-labelledby="prediction-modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="prediction-modal-title" class="modal-title">予想を追加</h3>
+                <button class="close-btn" onclick="closePredictionModal()" aria-label="モーダルを閉じる">&times;</button>
             </div>
+            <form id="prediction-form" novalidate>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="race-date">開催日</label>
+                        <input type="date" class="form-input" id="race-date" required aria-describedby="race-date-error">
+                        <div id="race-date-error" class="error-message" role="alert"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="race-venue">競馬場</label>
+                        <select class="form-select" id="race-venue" required aria-describedby="race-venue-error">
+                            <option value="">選択してください</option>
+                            <option value="tokyo">東京</option>
+                            <option value="kyoto">京都</option>
+                            <option value="hanshin">阪神</option>
+                            <option value="nakayama">中山</option>
+                            <option value="kokura">小倉</option>
+                            <option value="niigata">新潟</option>
+                            <option value="hakodate">函館</option>
+                            <option value="sapporo">札幌</option>
+                            <option value="chukyo">中京</option>
+                            <option value="fukushima">福島</option>
+                        </select>
+                        <div id="race-venue-error" class="error-message" role="alert"></div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="race-number">レース番号</label>
+                        <select class="form-select" id="race-number" required>
+                            <option value="">選択</option>
+                            <option value="1">1R</option>
+                            <option value="2">2R</option>
+                            <option value="3">3R</option>
+                            <option value="4">4R</option>
+                            <option value="5">5R</option>
+                            <option value="6">6R</option>
+                            <option value="7">7R</option>
+                            <option value="8">8R</option>
+                            <option value="9">9R</option>
+                            <option value="10">10R</option>
+                            <option value="11">11R</option>
+                            <option value="12">12R</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="confidence">自信度</label>
+                        <select class="form-select" id="confidence" required>
+                            <option value="">選択</option>
+                            <option value="1">★☆☆☆☆ (様子見)</option>
+                            <option value="2">★★☆☆☆ (軽め)</option>
+                            <option value="3">★★★☆☆ (普通)</option>
+                            <option value="4">★★★★☆ (自信あり)</option>
+                            <option value="5">★★★★★ (勝負レース)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="race-name">レース名（オプション）</label>
+                    <input type="text" class="form-input" id="race-name" placeholder="例：日本ダービー、有馬記念">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="prediction-text">予想内容</label>
+                    <textarea class="form-textarea" id="prediction-text" placeholder="本命、対抗、穴馬などの予想と根拠を記入してください..." required aria-describedby="prediction-text-help"></textarea>
+                    <div id="prediction-text-help" class="sr-only">予想の根拠や注目ポイントを詳しく記入してください</div>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="closePredictionModal()">キャンセル</button>
+                    <button type="submit" class="btn btn-primary" id="save-prediction-btn">
+                        <span>💾</span> 予想を保存
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- Link Edit Modal -->
-    <div class="modal" id="link-modal">
+    <!-- Link modal -->
+    <div class="modal" id="link-modal" role="dialog" aria-labelledby="link-modal-title" aria-hidden="true">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="modal-title">リンクを追加</h3>
-                <button class="close-btn" onclick="closeLinkModal()">&times;</button>
+                <h3 id="link-modal-title" class="modal-title">リンクを追加</h3>
+                <button class="close-btn" onclick="closeLinkModal()" aria-label="モーダルを閉じる">&times;</button>
             </div>
-            <form id="link-form">
+            <form id="link-form" novalidate>
                 <div class="form-group">
-                    <label class="form-label">プラットフォーム</label>
-                    <select class="form-select" id="link-platform" onchange="updateLinkPreview()">
-                        <option value="custom">カスタム</option>
-                        <option value="instagram">Instagram</option>
-                        <option value="twitter">Twitter</option>
+                    <label class="form-label" for="link-platform">プラットフォーム</label>
+                    <select class="form-select" id="link-platform" onchange="updateLinkPreview()" required>
+                        <option value="">選択してください</option>
+                        <option value="jra">JRA公式</option>
+                        <option value="netkeiba">netkeiba</option>
+                        <option value="klan">競馬ランキング</option>
+                        <option value="keibai">地方競馬</option>
                         <option value="youtube">YouTube</option>
-                        <option value="tiktok">TikTok</option>
-                        <option value="linkedin">LinkedIn</option>
-                        <option value="github">GitHub</option>
-                        <option value="website">Website</option>
-                        <option value="spotify">Spotify</option>
-                        <option value="discord">Discord</option>
+                        <option value="twitter">Twitter</option>
+                        <option value="note">note</option>
+                        <option value="blog">ブログ</option>
+                        <option value="custom">カスタム</option>
                     </select>
                 </div>
+                
                 <div class="form-group">
-                    <label class="form-label">タイトル</label>
-                    <input type="text" class="form-input" id="link-title" placeholder="リンクのタイトル" oninput="updateLinkPreview()">
+                    <label class="form-label" for="link-title">タイトル</label>
+                    <input type="text" class="form-input" id="link-title" placeholder="リンクのタイトル" oninput="updateLinkPreview()" required>
                 </div>
+                
                 <div class="form-group">
-                    <label class="form-label">説明（オプション）</label>
+                    <label class="form-label" for="link-subtitle">説明（オプション）</label>
                     <input type="text" class="form-input" id="link-subtitle" placeholder="短い説明" oninput="updateLinkPreview()">
                 </div>
+                
                 <div class="form-group">
-                    <label class="form-label">URL</label>
-                    <input type="url" class="form-input" id="link-url" placeholder="https://example.com" oninput="updateLinkPreview()">
+                    <label class="form-label" for="link-url">URL</label>
+                    <input type="url" class="form-input" id="link-url" placeholder="https://example.com" oninput="updateLinkPreview()" required>
                 </div>
+                
                 <div class="form-group">
-                    <label class="form-label">アイコン (絵文字)</label>
+                    <label class="form-label" for="link-icon">アイコン (絵文字)</label>
                     <input type="text" class="form-input" id="link-icon" placeholder="🔗" maxlength="2" oninput="updateLinkPreview()">
                 </div>
                 
                 <!-- Link Preview -->
                 <div class="form-group">
                     <label class="form-label">プレビュー</label>
-                    <div class="link-item" id="link-preview">
+                    <div class="link-item" id="link-preview" role="img" aria-label="リンクプレビュー">
                         <div class="link-button">
                             <div class="link-icon" id="preview-icon">🔗</div>
                             <div class="link-content">
@@ -845,76 +1179,98 @@
 
                 <div class="form-buttons">
                     <button type="button" class="btn btn-secondary" onclick="closeLinkModal()">キャンセル</button>
-                    <button type="submit" class="btn btn-primary" id="save-btn">保存</button>
+                    <button type="submit" class="btn btn-primary" id="save-link-btn">
+                        <span>💾</span> 保存
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- QR Code Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
-    
-    <!-- Sortable.js for drag & drop -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <!-- Result modal -->
+    <div class="modal" id="result-modal" role="dialog" aria-labelledby="result-modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="result-modal-title" class="modal-title">結果を入力</h3>
+                <button class="close-btn" onclick="closeResultModal()" aria-label="モーダルを閉じる">&times;</button>
+            </div>
+            <form id="result-form">
+                <div class="form-group">
+                    <label class="form-label" for="result-status">結果</label>
+                    <select class="form-select" id="result-status" required>
+                        <option value="">選択してください</option>
+                        <option value="hit">🎯 的中</option>
+                        <option value="miss">❌ 不的中</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="result-comment">結果コメント（オプション）</label>
+                    <textarea class="form-textarea" id="result-comment" placeholder="結果についてのコメント..."></textarea>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="closeResultModal()">キャンセル</button>
+                    <button type="submit" class="btn btn-success">
+                        <span>✅</span> 結果を保存
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script>
-        // Global State
+        // Global state
         let isAdminMode = false;
+        let editingPredictionId = null;
         let editingLinkId = null;
+        let editingResultId = null;
+        let predictionsData = [];
         let linksData = [];
         let profileData = {
-            name: 'My Links',
-            description: 'あなたのすべてのリンクを一つの場所に。SNS、ウェブサイト、作品など、簡単にシェアしましょう。',
-            avatar: 'M',
-            theme: 'default'
+            name: '競馬予想師 山田太郎',
+            description: '的中率重視の堅実予想で皆様の競馬ライフをサポート。地方・中央問わず幅広く予想を提供しています。',
+            avatar: '🐎',
+            hitRate: 68.5,
+            roi: 245,
+            totalRaces: 156,
+            streak: 8
         };
         let analyticsData = {
-            totalClicks: 0,
             totalViews: 1,
-            todayClicks: 0,
-            weeklyClicks: 0,
-            linkClicks: {}
+            totalClicks: 0
         };
 
-        // Platform configurations
+        // Font size state
+        let currentFontSize = 1;
+        const fontSizes = [0.875, 1, 1.125, 1.25, 1.375];
+
+        // Platform configurations for racing sites
         const platformConfig = {
-            instagram: { icon: '📷', defaultTitle: 'Instagram', color: 'linear-gradient(135deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%)' },
-            twitter: { icon: '🐦', defaultTitle: 'Twitter', color: '#1da1f2' },
-            youtube: { icon: '🎥', defaultTitle: 'YouTube', color: '#ff0000' },
-            tiktok: { icon: '🎵', defaultTitle: 'TikTok', color: 'linear-gradient(135deg, #ff0050, #00f2ea)' },
-            linkedin: { icon: '💼', defaultTitle: 'LinkedIn', color: '#0077b5' },
-            github: { icon: '💻', defaultTitle: 'GitHub', color: '#333' },
-            website: { icon: '🌐', defaultTitle: 'Website', color: 'linear-gradient(135deg, #667eea, #764ba2)' },
-            spotify: { icon: '🎧', defaultTitle: 'Spotify', color: '#1db954' },
-            discord: { icon: '🎮', defaultTitle: 'Discord', color: '#7289da' },
-            custom: { icon: '🔗', defaultTitle: 'Custom Link', color: 'linear-gradient(135deg, #667eea, #764ba2)' }
-        };
-
-        // Theme configurations
-        const themes = {
-            default: { bg1: '#667eea', bg2: '#764ba2' },
-            sunset: { bg1: '#ff6b6b', bg2: '#ee5a24' },
-            ocean: { bg1: '#00d2ff', bg2: '#3a7bd5' },
-            nature: { bg1: '#2ecc71', bg2: '#27ae60' },
-            pink: { bg1: '#f093fb', bg2: '#f5576c' },
-            sky: { bg1: '#4facfe', bg2: '#00f2fe' }
+            jra: { icon: '🏇', defaultTitle: 'JRA公式', color: '#1e40af' },
+            netkeiba: { icon: '🐎', defaultTitle: 'netkeiba', color: '#059669' },
+            klan: { icon: '🏆', defaultTitle: '競馬ランキング', color: '#dc2626' },
+            keibai: { icon: '🏁', defaultTitle: '地方競馬', color: '#7c3aed' },
+            youtube: { icon: '🎥', defaultTitle: 'YouTube', color: '#dc2626' },
+            twitter: { icon: '🐦', defaultTitle: 'Twitter', color: '#1d4ed8' },
+            note: { icon: '📝', defaultTitle: 'note', color: '#059669' },
+            blog: { icon: '📰', defaultTitle: 'ブログ', color: '#ea580c' },
+            custom: { icon: '🔗', defaultTitle: 'カスタムリンク', color: '#6366f1' }
         };
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
             loadData();
             renderProfile();
+            renderPredictions();
             renderLinks();
-            generateQRCode();
-            createParticles();
-            initializeSortable();
             updateStats();
             
             // Increment view count
             analyticsData.totalViews++;
             saveData();
             
-            // Add loading animation delays
+            // Add loading animation
             setTimeout(() => {
                 document.querySelectorAll('.loading').forEach((el, index) => {
                     setTimeout(() => {
@@ -923,33 +1279,76 @@
                     }, index * 100);
                 });
             }, 100);
+
+            // Add sample data if empty
+            if (predictionsData.length === 0) {
+                addSamplePredictions();
+            }
+            if (linksData.length === 0) {
+                addSampleLinks();
+            }
         });
+
+        // Accessibility functions
+        function adjustFontSize(direction) {
+            if (direction === 0) {
+                currentFontSize = 1; // Reset
+            } else {
+                const newIndex = Math.max(0, Math.min(fontSizes.length - 1, fontSizes.indexOf(fontSizes[currentFontSize]) + direction));
+                currentFontSize = fontSizes[newIndex];
+            }
+            
+            document.documentElement.style.fontSize = currentFontSize + 'rem';
+            
+            // Announce change to screen readers
+            announceToScreenReader(`文字サイズを${direction === 1 ? '大きく' : direction === -1 ? '小さく' : 'リセット'}しました`);
+        }
+
+        function announceToScreenReader(message) {
+            const announcement = document.createElement('div');
+            announcement.setAttribute('aria-live', 'polite');
+            announcement.setAttribute('aria-atomic', 'true');
+            announcement.className = 'sr-only';
+            announcement.textContent = message;
+            document.body.appendChild(announcement);
+            
+            setTimeout(() => {
+                document.body.removeChild(announcement);
+            }, 1000);
+        }
+
+        function handleKeyPress(event, callback) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                callback();
+            }
+        }
 
         // Data persistence
         function saveData() {
-            localStorage.setItem('mylinks_profile', JSON.stringify(profileData));
-            localStorage.setItem('mylinks_links', JSON.stringify(linksData));
-            localStorage.setItem('mylinks_analytics', JSON.stringify(analyticsData));
+            localStorage.setItem('horselinks_profile', JSON.stringify(profileData));
+            localStorage.setItem('horselinks_predictions', JSON.stringify(predictionsData));
+            localStorage.setItem('horselinks_links', JSON.stringify(linksData));
+            localStorage.setItem('horselinks_analytics', JSON.stringify(analyticsData));
         }
 
         function loadData() {
-            const savedProfile = localStorage.getItem('mylinks_profile');
-            const savedLinks = localStorage.getItem('mylinks_links');
-            const savedAnalytics = localStorage.getItem('mylinks_analytics');
+            const savedProfile = localStorage.getItem('horselinks_profile');
+            const savedPredictions = localStorage.getItem('horselinks_predictions');
+            const savedLinks = localStorage.getItem('horselinks_links');
+            const savedAnalytics = localStorage.getItem('horselinks_analytics');
             
             if (savedProfile) {
                 profileData = { ...profileData, ...JSON.parse(savedProfile) };
+            }
+            if (savedPredictions) {
+                predictionsData = JSON.parse(savedPredictions);
             }
             if (savedLinks) {
                 linksData = JSON.parse(savedLinks);
             }
             if (savedAnalytics) {
                 analyticsData = { ...analyticsData, ...JSON.parse(savedAnalytics) };
-            }
-            
-            // Apply saved theme
-            if (profileData.theme) {
-                changeTheme(profileData.theme);
             }
         }
 
@@ -959,10 +1358,17 @@
             document.body.classList.toggle('admin-mode', isAdminMode);
             document.getElementById('admin-text').textContent = isAdminMode ? '表示モード' : '管理モード';
             
+            // Update ARIA states
+            document.querySelectorAll('.admin-only').forEach(el => {
+                el.setAttribute('aria-hidden', !isAdminMode);
+            });
+            
             if (isAdminMode) {
                 enableEditMode();
+                announceToScreenReader('管理モードが有効になりました');
             } else {
                 disableEditMode();
+                announceToScreenReader('表示モードに切り替わりました');
             }
         }
 
@@ -984,7 +1390,6 @@
             profileData.name = document.getElementById('profile-name').textContent;
             profileData.description = document.getElementById('profile-description').textContent;
             saveData();
-            generateQRCode();
         }
 
         // Profile rendering
@@ -992,34 +1397,243 @@
             document.getElementById('profile-name').textContent = profileData.name;
             document.getElementById('profile-description').textContent = profileData.description;
             document.getElementById('avatar-text').textContent = profileData.avatar;
+            
+            // Update performance stats
+            document.getElementById('hit-rate').textContent = profileData.hitRate + '%';
+            document.getElementById('roi').textContent = (profileData.roi >= 0 ? '+' : '') + profileData.roi;
+            document.getElementById('total-races').textContent = profileData.totalRaces;
+            document.getElementById('streak').textContent = profileData.streak;
+            
+            // Update stat colors
+            document.getElementById('hit-rate').className = 'performance-number ' + (profileData.hitRate >= 60 ? 'positive' : 'negative');
+            document.getElementById('roi').className = 'performance-number ' + (profileData.roi >= 0 ? 'positive' : 'negative');
         }
 
-        // Avatar selection
-        function selectAvatar() {
-            if (isAdminMode) {
-                document.getElementById('avatar-input').click();
+        // Predictions management
+        function renderPredictions() {
+            const container = document.getElementById('predictions-container');
+            container.innerHTML = '';
+            
+            if (predictionsData.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                        <p>まだ予想が投稿されていません。</p>
+                        ${isAdminMode ? '<p>「予想追加」ボタンから最初の予想を投稿しましょう。</p>' : ''}
+                    </div>
+                `;
+                return;
             }
+            
+            // Sort predictions by date (newest first)
+            const sortedPredictions = [...predictionsData].sort((a, b) => new Date(b.raceDate) - new Date(a.raceDate));
+            
+            sortedPredictions.forEach((prediction, index) => {
+                const predictionElement = createPredictionElement(prediction, index);
+                container.appendChild(predictionElement);
+            });
         }
 
-        document.getElementById('avatar-input').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const avatar = document.querySelector('.profile-avatar');
-                    avatar.style.backgroundImage = `url(${e.target.result})`;
-                    avatar.style.backgroundSize = 'cover';
-                    avatar.style.backgroundPosition = 'center';
-                    document.getElementById('avatar-text').style.display = 'none';
-                    
-                    profileData.avatarImage = e.target.result;
-                    saveData();
-                };
-                reader.readAsDataURL(file);
+        function createPredictionElement(prediction, index) {
+            const predictionDiv = document.createElement('article');
+            predictionDiv.className = `prediction-card ${prediction.result || 'pending'}`;
+            predictionDiv.setAttribute('data-id', prediction.id);
+            
+            const confidenceStars = '★'.repeat(prediction.confidence) + '☆'.repeat(5 - prediction.confidence);
+            const raceDate = new Date(prediction.raceDate).toLocaleDateString('ja-JP');
+            const resultIcon = prediction.result === 'hit' ? '🎯' : prediction.result === 'miss' ? '❌' : '⏳';
+            const resultText = prediction.result === 'hit' ? '的中' : prediction.result === 'miss' ? '不的中' : '結果待ち';
+            
+            predictionDiv.innerHTML = `
+                <div class="prediction-header">
+                    <div class="race-info">
+                        <h3 class="race-title">
+                            ${prediction.raceName || `${prediction.venue}${prediction.raceNumber}R`}
+                        </h3>
+                        <div class="race-details">
+                            <span class="race-tag">${raceDate}</span>
+                            <span class="race-tag">${prediction.venue}</span>
+                            <span class="race-tag">${prediction.raceNumber}R</span>
+                            <span class="race-tag">${resultIcon} ${resultText}</span>
+                        </div>
+                    </div>
+                    <div class="confidence-level" aria-label="自信度 ${prediction.confidence}点">
+                        <span class="confidence-stars">${confidenceStars}</span>
+                    </div>
+                </div>
+                
+                <div class="prediction-content">
+                    <div class="prediction-text">${prediction.content}</div>
+                </div>
+                
+                <div class="prediction-footer">
+                    <div class="prediction-meta">
+                        投稿日時: ${new Date(prediction.createdAt).toLocaleString('ja-JP')}
+                        ${prediction.resultComment ? `<br>結果コメント: ${prediction.resultComment}` : ''}
+                    </div>
+                    <div class="prediction-actions admin-only">
+                        ${!prediction.result ? `<button class="action-btn result" onclick="openResultModal('${prediction.id}')" aria-label="結果を入力">結果入力</button>` : ''}
+                        <button class="action-btn edit" onclick="editPrediction('${prediction.id}')" aria-label="予想を編集">編集</button>
+                        <button class="action-btn delete" onclick="deletePrediction('${prediction.id}')" aria-label="予想を削除">削除</button>
+                    </div>
+                </div>
+            `;
+            
+            return predictionDiv;
+        }
+
+        // Prediction modal functions
+        function openPredictionModal() {
+            editingPredictionId = null;
+            document.getElementById('prediction-modal-title').textContent = '予想を追加';
+            document.getElementById('save-prediction-btn').innerHTML = '<span>💾</span> 予想を保存';
+            clearPredictionForm();
+            showModal('prediction-modal');
+        }
+
+        function editPrediction(predictionId) {
+            editingPredictionId = predictionId;
+            const prediction = predictionsData.find(p => p.id === predictionId);
+            
+            document.getElementById('prediction-modal-title').textContent = '予想を編集';
+            document.getElementById('save-prediction-btn').innerHTML = '<span>✏️</span> 予想を更新';
+            
+            // Populate form
+            document.getElementById('race-date').value = prediction.raceDate;
+            document.getElementById('race-venue').value = prediction.venue;
+            document.getElementById('race-number').value = prediction.raceNumber;
+            document.getElementById('race-name').value = prediction.raceName || '';
+            document.getElementById('confidence').value = prediction.confidence;
+            document.getElementById('prediction-text').value = prediction.content;
+            
+            showModal('prediction-modal');
+        }
+
+        function closePredictionModal() {
+            hideModal('prediction-modal');
+            clearPredictionForm();
+        }
+
+        function clearPredictionForm() {
+            document.getElementById('prediction-form').reset();
+            clearFormErrors();
+        }
+
+        // Result modal functions
+        function openResultModal(predictionId) {
+            editingResultId = predictionId;
+            document.getElementById('result-form').reset();
+            showModal('result-modal');
+        }
+
+        function closeResultModal() {
+            hideModal('result-modal');
+            editingResultId = null;
+        }
+
+        // Form submission handlers
+        document.getElementById('prediction-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validatePredictionForm()) {
+                return;
             }
+            
+            const formData = new FormData(e.target);
+            const predictionData = {
+                id: editingPredictionId || generateId(),
+                raceDate: document.getElementById('race-date').value,
+                venue: document.getElementById('race-venue').value,
+                raceNumber: document.getElementById('race-number').value,
+                raceName: document.getElementById('race-name').value,
+                confidence: parseInt(document.getElementById('confidence').value),
+                content: document.getElementById('prediction-text').value,
+                createdAt: editingPredictionId ? predictionsData.find(p => p.id === editingPredictionId).createdAt : Date.now(),
+                updatedAt: Date.now()
+            };
+            
+            if (editingPredictionId) {
+                const index = predictionsData.findIndex(p => p.id === editingPredictionId);
+                predictionsData[index] = { ...predictionsData[index], ...predictionData };
+                announceToScreenReader('予想が更新されました');
+            } else {
+                predictionsData.push(predictionData);
+                announceToScreenReader('新しい予想が追加されました');
+            }
+            
+            saveData();
+            renderPredictions();
+            updateStats();
+            closePredictionModal();
         });
 
-        // Links management
+        document.getElementById('result-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const result = document.getElementById('result-status').value;
+            const comment = document.getElementById('result-comment').value;
+            
+            if (!result) {
+                showError('result-status', '結果を選択してください');
+                return;
+            }
+            
+            const predictionIndex = predictionsData.findIndex(p => p.id === editingResultId);
+            if (predictionIndex !== -1) {
+                predictionsData[predictionIndex].result = result;
+                predictionsData[predictionIndex].resultComment = comment;
+                predictionsData[predictionIndex].updatedAt = Date.now();
+                
+                // Update performance stats
+                updatePerformanceStats();
+                
+                saveData();
+                renderPredictions();
+                renderProfile();
+                announceToScreenReader(`結果が${result === 'hit' ? '的中' : '不的中'}として登録されました`);
+            }
+            
+            closeResultModal();
+        });
+
+        function updatePerformanceStats() {
+            const totalPredictions = predictionsData.filter(p => p.result).length;
+            const hits = predictionsData.filter(p => p.result === 'hit').length;
+            
+            if (totalPredictions > 0) {
+                profileData.hitRate = Math.round((hits / totalPredictions) * 1000) / 10;
+                profileData.totalRaces = totalPredictions;
+                
+                // Calculate streak (consecutive hits from latest)
+                let streak = 0;
+                const sortedWithResults = predictionsData
+                    .filter(p => p.result)
+                    .sort((a, b) => new Date(b.raceDate) - new Date(a.raceDate));
+                
+                for (const prediction of sortedWithResults) {
+                    if (prediction.result === 'hit') {
+                        streak++;
+                    } else {
+                        break;
+                    }
+                }
+                
+                profileData.streak = streak;
+            }
+        }
+
+        function deletePrediction(predictionId) {
+            if (confirm('この予想を削除しますか？')) {
+                predictionsData = predictionsData.filter(p => p.id !== predictionId);
+                updatePerformanceStats();
+                saveData();
+                renderPredictions();
+                renderProfile();
+                updateStats();
+                announceToScreenReader('予想が削除されました');
+            }
+        }
+
+        // Links management (similar to previous implementation but with racing platforms)
         function renderLinks() {
             const container = document.getElementById('links-container');
             container.innerHTML = '';
@@ -1036,26 +1650,36 @@
             const linkDiv = document.createElement('div');
             linkDiv.className = 'link-item';
             linkDiv.setAttribute('data-id', link.id);
+            linkDiv.setAttribute('role', 'listitem');
             
             const platform = platformConfig[link.platform] || platformConfig.custom;
-            const iconBg = link.platform !== 'custom' ? platform.color : 'linear-gradient(135deg, #667eea, #764ba2)';
             
             linkDiv.innerHTML = `
-                <div class="link-button" onclick="handleLinkClick('${link.id}')">
-                    <div class="link-icon link-${link.platform}" style="background: ${iconBg}">
+                <a href="${link.url}" class="link-button" target="_blank" rel="noopener noreferrer" onclick="handleLinkClick('${link.id}')" aria-describedby="link-desc-${link.id}">
+                    <div class="link-icon link-${link.platform}" style="background: ${platform.color}; color: white;">
                         ${link.icon || platform.icon}
                     </div>
                     <div class="link-content">
                         <div class="link-title">${link.title}</div>
-                        ${link.subtitle ? `<div class="link-subtitle">${link.subtitle}</div>` : ''}
+                        ${link.subtitle ? `<div class="link-subtitle" id="link-desc-${link.id}">${link.subtitle}</div>` : ''}
                     </div>
-                    <div class="link-arrow">→</div>
-                </div>
-                <div class="link-controls admin-only">
-                    <button class="control-btn edit-btn" onclick="editLink('${link.id}')" title="編集">✏️</button>
-                    <button class="control-btn delete-btn" onclick="deleteLink('${link.id}')" title="削除">🗑️</button>
+                    <div class="link-arrow" aria-hidden="true">→</div>
+                </a>
+                <div class="prediction-actions admin-only" style="position: absolute; top: 8px; right: 8px; display: none;">
+                    <button class="action-btn edit" onclick="editLink('${link.id}')" aria-label="リンクを編集">編集</button>
+                    <button class="action-btn delete" onclick="deleteLink('${link.id}')" aria-label="リンクを削除">削除</button>
                 </div>
             `;
+            
+            // Show admin controls on hover in admin mode
+            if (isAdminMode) {
+                linkDiv.addEventListener('mouseenter', () => {
+                    linkDiv.querySelector('.prediction-actions').style.display = 'flex';
+                });
+                linkDiv.addEventListener('mouseleave', () => {
+                    linkDiv.querySelector('.prediction-actions').style.display = 'none';
+                });
+            }
             
             return linkDiv;
         }
@@ -1063,37 +1687,26 @@
         function handleLinkClick(linkId) {
             if (isAdminMode) return;
             
-            const link = linksData.find(l => l.id === linkId);
-            if (link) {
-                // Track click
-                analyticsData.totalClicks++;
-                analyticsData.todayClicks++;
-                analyticsData.weeklyClicks++;
-                analyticsData.linkClicks[linkId] = (analyticsData.linkClicks[linkId] || 0) + 1;
-                
-                saveData();
-                updateStats();
-                
-                // Open link
-                window.open(link.url, '_blank');
-            }
+            analyticsData.totalClicks++;
+            saveData();
+            updateStats();
         }
 
-        // Link modal functions
+        // Link modal functions (similar to previous implementation)
         function openAddLinkModal() {
             editingLinkId = null;
-            document.getElementById('modal-title').textContent = 'リンクを追加';
-            document.getElementById('save-btn').textContent = '追加';
+            document.getElementById('link-modal-title').textContent = 'リンクを追加';
+            document.getElementById('save-link-btn').innerHTML = '<span>💾</span> 保存';
             clearLinkForm();
-            document.getElementById('link-modal').classList.add('active');
+            showModal('link-modal');
         }
 
         function editLink(linkId) {
             editingLinkId = linkId;
             const link = linksData.find(l => l.id === linkId);
             
-            document.getElementById('modal-title').textContent = 'リンクを編集';
-            document.getElementById('save-btn').textContent = '更新';
+            document.getElementById('link-modal-title').textContent = 'リンクを編集';
+            document.getElementById('save-link-btn').innerHTML = '<span>✏️</span> 更新';
             
             // Populate form
             document.getElementById('link-platform').value = link.platform;
@@ -1103,17 +1716,18 @@
             document.getElementById('link-icon').value = link.icon || '';
             
             updateLinkPreview();
-            document.getElementById('link-modal').classList.add('active');
+            showModal('link-modal');
         }
 
         function closeLinkModal() {
-            document.getElementById('link-modal').classList.remove('active');
+            hideModal('link-modal');
             clearLinkForm();
         }
 
         function clearLinkForm() {
             document.getElementById('link-form').reset();
             updateLinkPreview();
+            clearFormErrors();
         }
 
         function updateLinkPreview() {
@@ -1122,7 +1736,7 @@
             const subtitle = document.getElementById('link-subtitle').value;
             const icon = document.getElementById('link-icon').value;
             
-            const config = platformConfig[platform];
+            const config = platformConfig[platform] || platformConfig.custom;
             const previewTitle = title || config.defaultTitle;
             const previewIcon = icon || config.icon;
             
@@ -1132,23 +1746,21 @@
             
             const previewIconEl = document.getElementById('preview-icon');
             previewIconEl.style.background = config.color;
-            previewIconEl.parentNode.className = `link-item link-${platform}`;
+            previewIconEl.style.color = 'white';
         }
 
-        // Form submission
         document.getElementById('link-form').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            if (!validateLinkForm()) {
+                return;
+            }
             
             const platform = document.getElementById('link-platform').value;
             const title = document.getElementById('link-title').value;
             const subtitle = document.getElementById('link-subtitle').value;
             const url = document.getElementById('link-url').value;
             const icon = document.getElementById('link-icon').value;
-            
-            if (!title || !url) {
-                alert('タイトルとURLは必須です');
-                return;
-            }
             
             const linkData = {
                 id: editingLinkId || generateId(),
@@ -1163,8 +1775,10 @@
             if (editingLinkId) {
                 const index = linksData.findIndex(l => l.id === editingLinkId);
                 linksData[index] = linkData;
+                announceToScreenReader('リンクが更新されました');
             } else {
                 linksData.push(linkData);
+                announceToScreenReader('新しいリンクが追加されました');
             }
             
             saveData();
@@ -1177,210 +1791,271 @@
                 linksData = linksData.filter(l => l.id !== linkId);
                 saveData();
                 renderLinks();
+                announceToScreenReader('リンクが削除されました');
             }
         }
 
+        // Form validation
+        function validatePredictionForm() {
+            clearFormErrors();
+            let isValid = true;
+            
+            const raceDate = document.getElementById('race-date').value;
+            const venue = document.getElementById('race-venue').value;
+            const raceNumber = document.getElementById('race-number').value;
+            const confidence = document.getElementById('confidence').value;
+            const content = document.getElementById('prediction-text').value;
+            
+            if (!raceDate) {
+                showError('race-date', '開催日を選択してください');
+                isValid = false;
+            }
+            
+            if (!venue) {
+                showError('race-venue', '競馬場を選択してください');
+                isValid = false;
+            }
+            
+            if (!raceNumber) {
+                showError('race-number', 'レース番号を選択してください');
+                isValid = false;
+            }
+            
+            if (!confidence) {
+                showError('confidence', '自信度を選択してください');
+                isValid = false;
+            }
+            
+            if (!content.trim()) {
+                showError('prediction-text', '予想内容を入力してください');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        function validateLinkForm() {
+            clearFormErrors();
+            let isValid = true;
+            
+            const platform = document.getElementById('link-platform').value;
+            const title = document.getElementById('link-title').value;
+            const url = document.getElementById('link-url').value;
+            
+            if (!platform) {
+                showError('link-platform', 'プラットフォームを選択してください');
+                isValid = false;
+            }
+            
+            if (!title.trim()) {
+                showError('link-title', 'タイトルを入力してください');
+                isValid = false;
+            }
+            
+            if (!url.trim()) {
+                showError('link-url', 'URLを入力してください');
+                isValid = false;
+            } else if (!isValidUrl(url)) {
+                showError('link-url', '有効なURLを入力してください');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        function showError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            field.classList.add('error');
+            field.setAttribute('aria-invalid', 'true');
+            
+            const errorElement = document.getElementById(fieldId + '-error') || createErrorElement(fieldId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        function createErrorElement(fieldId) {
+            const errorDiv = document.createElement('div');
+            errorDiv.id = fieldId + '-error';
+            errorDiv.className = 'error-message';
+            errorDiv.setAttribute('role', 'alert');
+            
+            const field = document.getElementById(fieldId);
+            field.parentNode.insertBefore(errorDiv, field.nextSibling);
+            
+            return errorDiv;
+        }
+
+        function clearFormErrors() {
+            document.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(field => {
+                field.classList.remove('error');
+                field.removeAttribute('aria-invalid');
+            });
+            
+            document.querySelectorAll('.error-message').forEach(error => {
+                error.style.display = 'none';
+                error.textContent = '';
+            });
+        }
+
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        // Modal management
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('active');
+            modal.setAttribute('aria-hidden', 'false');
+            
+            // Focus management
+            const firstFocusable = modal.querySelector('input, select, textarea, button');
+            if (firstFocusable) {
+                firstFocusable.focus();
+            }
+            
+            // Trap focus within modal
+            trapFocus(modal);
+        }
+
+        function hideModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+            modal.setAttribute('aria-hidden', 'true');
+        }
+
+        function trapFocus(element) {
+            const focusableElements = element.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            const firstFocusable = focusableElements[0];
+            const lastFocusable = focusableElements[focusableElements.length - 1];
+
+            element.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstFocusable) {
+                            lastFocusable.focus();
+                            e.preventDefault();
+                        }
+                    } else {
+                        if (document.activeElement === lastFocusable) {
+                            firstFocusable.focus();
+                            e.preventDefault();
+                        }
+                    }
+                }
+                
+                if (e.key === 'Escape') {
+                    hideModal(element.id);
+                }
+            });
+        }
+
+        // Utility functions
         function generateId() {
             return Date.now().toString(36) + Math.random().toString(36).substr(2);
         }
 
-        // Sortable functionality
-        function initializeSortable() {
-            const container = document.getElementById('links-container');
-            new Sortable(container, {
-                animation: 150,
-                disabled: false,
-                onEnd: function(evt) {
-                    if (!isAdminMode) return;
-                    
-                    const oldIndex = evt.oldIndex;
-                    const newIndex = evt.newIndex;
-                    
-                    // Reorder array
-                    const item = linksData.splice(oldIndex, 1)[0];
-                    linksData.splice(newIndex, 0, item);
-                    
-                    saveData();
+        function updateStats() {
+            document.getElementById('total-links').textContent = linksData.length;
+            document.getElementById('total-views').textContent = analyticsData.totalViews;
+        }
+
+        // Sample data
+        function addSamplePredictions() {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            predictionsData = [
+                {
+                    id: 'sample-pred-1',
+                    raceDate: tomorrow.toISOString().split('T')[0],
+                    venue: '東京',
+                    raceNumber: '11',
+                    raceName: '東京大賞典',
+                    confidence: 4,
+                    content: '本命: 5番 ◯◯◯◯\n対抗: 3番 △△△△\n穴馬: 8番 ××××\n\n東京大賞典は例年波乱が多いレースですが、今年は5番が中心。前走の内容が抜けており、距離適性も申し分なし。3番は安定感抜群で連対候補筆頭。8番は人気薄ながら末脚に光るものがあり、3着狙いで面白い存在。',
+                    createdAt: Date.now() - 3600000,
+                    result: 'hit',
+                    resultComment: '本命5番が見事に勝利！予想通りの展開でした。'
+                },
+                {
+                    id: 'sample-pred-2',
+                    raceDate: today.toISOString().split('T')[0],
+                    venue: '中山',
+                    raceNumber: '9',
+                    confidence: 3,
+                    content: '本命: 2番 ●●●●\n対抗: 7番 ▲▲▲▲\n\n中山9Rは2番を軸に組み立て。前走の負け方に好材料が多く、今回は巻き返しが期待できる。7番は実績上位で安定感がある。',
+                    createdAt: Date.now() - 7200000
                 }
-            });
-        }
-
-        // QR Code generation
-        function generateQRCode() {
-            const canvas = document.getElementById('qr-canvas');
-            const url = window.location.href;
-            
-            QRCode.toCanvas(canvas, url, {
-                width: 180,
-                margin: 2,
-                color: {
-                    dark: '#000000',
-                    light: '#FFFFFF'
-                }
-            });
-        }
-
-        // Share functionality
-        async function shareProfile() {
-            const url = window.location.href;
-            const title = profileData.name;
-            const text = profileData.description;
-            
-            if (navigator.share) {
-                try {
-                    await navigator.share({ title, text, url });
-                } catch (err) {
-                    copyToClipboard(url);
-                }
-            } else {
-                copyToClipboard(url);
-            }
-        }
-
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('URLをクリップボードにコピーしました！');
-            }).catch(() => {
-                // Fallback
-                const textarea = document.createElement('textarea');
-                textarea.value = text;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                showToast('URLをクリップボードにコピーしました！');
-            });
-        }
-
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.textContent = message;
-            toast.style.cssText = `
-                position: fixed;
-                bottom: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: var(--success-color);
-                color: white;
-                padding: 12px 24px;
-                border-radius: 8px;
-                z-index: 3000;
-                animation: slideUp 0.3s ease;
-            `;
-            
-            document.body.appendChild(toast);
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-        }
-
-        // Theme changing
-        function changeTheme(themeName) {
-            const theme = themes[themeName];
-            if (!theme) return;
-            
-            document.documentElement.style.setProperty('--bg-gradient-1', theme.bg1);
-            document.documentElement.style.setProperty('--bg-gradient-2', theme.bg2);
-            
-            // Update active theme selector
-            document.querySelectorAll('.theme-option').forEach(option => {
-                option.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            profileData.theme = themeName;
+            ];
             saveData();
         }
 
-        // Statistics
-        function updateStats() {
-            document.getElementById('total-links').textContent = linksData.length;
-            document.getElementById('total-clicks').textContent = analyticsData.totalClicks;
-            document.getElementById('total-views').textContent = analyticsData.totalViews;
-            document.getElementById('today-clicks').textContent = analyticsData.todayClicks;
-            document.getElementById('weekly-clicks').textContent = analyticsData.weeklyClicks;
-            
-            // Find most popular link
-            let popularLinkId = null;
-            let maxClicks = 0;
-            for (const [linkId, clicks] of Object.entries(analyticsData.linkClicks)) {
-                if (clicks > maxClicks) {
-                    maxClicks = clicks;
-                    popularLinkId = linkId;
-                }
-            }
-            
-            const popularLink = popularLinkId ? linksData.find(l => l.id === popularLinkId) : null;
-            document.getElementById('popular-link').textContent = popularLink ? popularLink.title : '-';
-        }
-
-        // Background particles
-        function createParticles() {
-            const container = document.getElementById('particles');
-            const particleCount = 50;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 6 + 's';
-                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
-                container.appendChild(particle);
-            }
-        }
-
-        // Modal close on outside click
-        document.getElementById('link-modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeLinkModal();
-            }
-        });
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeLinkModal();
-            }
-            if (e.key === 'a' && e.ctrlKey && isAdminMode) {
-                e.preventDefault();
-                openAddLinkModal();
-            }
-        });
-
-        // Add some sample data for demonstration
-        if (linksData.length === 0) {
+        function addSampleLinks() {
             linksData = [
                 {
-                    id: 'sample1',
-                    platform: 'instagram',
-                    title: 'Instagram',
-                    subtitle: 'フォローしてね！',
-                    url: 'https://instagram.com',
-                    icon: '📷',
+                    id: 'sample-link-1',
+                    platform: 'youtube',
+                    title: 'YouTube予想チャンネル',
+                    subtitle: '毎日の予想動画を配信中',
+                    url: 'https://youtube.com',
+                    icon: '🎥',
                     createdAt: Date.now()
                 },
                 {
-                    id: 'sample2',
+                    id: 'sample-link-2',
                     platform: 'twitter',
                     title: 'Twitter',
-                    subtitle: '最新情報をツイート',
+                    subtitle: 'リアルタイム予想と結果報告',
                     url: 'https://twitter.com',
                     icon: '🐦',
                     createdAt: Date.now()
                 },
                 {
-                    id: 'sample3',
-                    platform: 'youtube',
-                    title: 'YouTube Channel',
-                    subtitle: '動画をチェック',
-                    url: 'https://youtube.com',
-                    icon: '🎥',
+                    id: 'sample-link-3',
+                    platform: 'netkeiba',
+                    title: 'netkeiba予想',
+                    subtitle: '詳細な競馬データと予想',
+                    url: 'https://netkeiba.com',
+                    icon: '🐎',
                     createdAt: Date.now()
                 }
             ];
             saveData();
         }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            // Close modals with Escape
+            if (e.key === 'Escape') {
+                const activeModal = document.querySelector('.modal.active');
+                if (activeModal) {
+                    hideModal(activeModal.id);
+                }
+            }
+            
+            // Admin mode toggle with Ctrl+A
+            if (e.key === 'a' && e.ctrlKey) {
+                e.preventDefault();
+                toggleAdmin();
+            }
+        });
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    hideModal(this.id);
+                }
+            });
+        });
     </script>
 </body>
 </html>

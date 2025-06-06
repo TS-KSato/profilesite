@@ -1,0 +1,22 @@
+{
+  "predictions": [
+    {
+      "date": "2025-06-15",
+      "venue": "東京",
+      "race": "11R", 
+      "raceName": "日本ダービー",
+      "confidence": 4,
+      "bets": [
+        {"type": "馬連", "numbers": "13-17", "percentage": 50},
+        {"type": "馬単", "numbers": "13→17", "percentage": 20},
+        {"type": "ワイド", "numbers": "2-13", "percentage": 15},
+        {"type": "3連複", "numbers": "2-13-17", "percentage": 15}
+      ],
+      "horses": [
+        {"number": 13, "name": "フォルティス", "icon": "🎯", "comment": "能力最上位、距離延長◎"},
+        {"number": 17, "name": "メテオライト", "icon": "⚡", "comment": "上がり勝負向きで対抗"}
+      ],
+      "strategy": "平均～ややスロー、先行有利"
+    }
+  ]
+}

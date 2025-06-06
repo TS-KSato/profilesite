@@ -5,199 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>うま恋日記 – Sexy Turf Profile</title>
     <meta name="description" content="競馬場の芝のように瑞々しいグリーンを基調にしたプロフィールページ。週末のレースを彩る気まぐれな予想と感想を綴ります。">
+    <meta name="robots" content="index,follow">
+    <meta name="theme-color" content="#46a049">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Open Graph / Twitter Card -->
+    <meta property="og:title" content="うま恋日記 – Sexy Turf Profile">
+    <meta property="og:description" content="芝色を基調にした競馬×大人のプロフィール。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://example.com/">
+    <meta property="og:image" content="/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --------------------------------------------------
-           Global Color System – Turf Green Theme
-        -------------------------------------------------- */
-        :root {
-            /* Primary turf colours */
-            --primary-color: #2e7d32;  /* 芝の鮮やかなグリーン */
-            --secondary-color: #1b5e20; /* 深めのグリーン (影) */
-            --accent-color: #ff6d00;  /* アクセント (サイン色) */
-
-            /* Text colours */
-            --text-primary: #122109;
-            --text-secondary: #4e5e4b;
-            --text-muted: #6c7b69;
-            --text-inverse: #ffffff;
-
-            /* Backgrounds */
-            --bg-primary: #ffffff;
-            --bg-secondary: #f5f9f3;
-            --bg-tertiary: #e8f3e3;
-
-            /* Gradients */
-            --horse-gradient-1: #1b5e20;
-            --horse-gradient-2: #4caf50;
-
-            /* Misc */
-            --border-color: #d0e0cb;
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.12);
+        :root{
+            --turf-green:#46a049;
+            --turf-green-dark:#2e6d34;
+            --text:#1a1a1a;
+            --bg:#f5f5f5;
         }
-
-        /* Focus ring */
-        :focus-visible {
-            outline: 3px solid rgba(46,125,50,0.6);
-            outline-offset: 2px;
-        }
-
-        /* Reset & Typography */
-        *,*:before,*:after{box-sizing:border-box;margin:0;padding:0;}
-        body{
-            font-family:'Noto Sans JP',sans-serif;
-            color:var(--text-primary);
-            background:linear-gradient(135deg,var(--horse-gradient-1) 0%,var(--horse-gradient-2) 100%);
-            min-height:100vh;
-            overflow-x:hidden;
-        }
-
-        /* Container */
-        .container{max-width:480px;margin:0 auto;padding:20px;}
-
-        /* Profile Card */
-        .profile-card{
-            background:var(--bg-primary);
-            padding:32px 24px;
-            border-radius:16px;
-            box-shadow:var(--shadow-md);
-            text-align:center;
-            border:1px solid var(--border-color);
-            animation:fadeInUp .6s ease both;
-        }
-        .profile-avatar{
-            width:120px;height:120px;border-radius:50%;margin:0 auto 20px;
-            background:linear-gradient(135deg,var(--horse-gradient-1),var(--horse-gradient-2));
-            display:flex;align-items:center;justify-content:center;
-            color:var(--text-inverse);font-size:48px;font-weight:bold;
-        }
-        .profile-name{font-size:1.875rem;font-weight:700;margin-bottom:8px;}
-        .profile-description{font-size:1.125rem;line-height:1.6;color:var(--text-secondary);}        
-
-        /* Social Links */
-        .social-links{margin-top:24px;display:flex;justify-content:center;gap:16px;}
-        .social-link{
-            display:inline-flex;align-items:center;justify-content:center;
-            width:44px;height:44px;border-radius:50%;
-            background:var(--bg-secondary);
-            border:1px solid var(--border-color);
-            color:var(--primary-color);
-            font-size:20px;text-decoration:none;transition:background .2s;
-        }
-        .social-link:hover{background:var(--bg-tertiary);}        
-
-        /* Stats */
-        .profile-stats{display:flex;gap:12px;margin-top:24px;}
-        .stat-item{flex:1;background:var(--bg-secondary);padding:16px;border-radius:12px;text-align:center;border:1px solid var(--border-color);}        
-        .stat-number{font-size:1.5rem;font-weight:700;color:var(--primary-color);}        
-        .stat-label{font-size:.75rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;margin-top:4px;}
-
-        /* Predictions (read‑only) */
-        .predictions-section{margin-top:40px;}
-        .section-title{font-size:1.5rem;font-weight:700;color:var(--text-primary);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
-        .prediction-card{
-            background:var(--bg-secondary);
-            border:1px solid var(--border-color);
-            border-left:4px solid var(--secondary-color);
-            border-radius:12px;
-            padding:20px;margin-bottom:16px;
-            box-shadow:0 2px 6px rgba(0,0,0,0.05);
-        }
-        .race-title{font-weight:600;color:var(--text-primary);}
-        .race-details{font-size:.875rem;color:var(--text-secondary);margin-top:4px;}
-        .prediction-text{margin-top:12px;font-size:1rem;line-height:1.7;color:var(--text-primary);white-space:pre-wrap;}
-
-        /* Simple fade animation */
-        @keyframes fadeInUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
-
-        /* Responsive */
-        @media(max-width:768px){.container{padding:16px;}}
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Noto Sans JP',sans-serif;color:var(--text);background:var(--bg);line-height:1.7;}
+        header{background:linear-gradient(135deg,var(--turf-green) 0%,var(--turf-green-dark) 100%);color:#fff;text-align:center;padding:4rem 1rem 6rem;position:relative;overflow:hidden;}
+        header h1{font-size:2.5rem;font-weight:700;letter-spacing:.05em;}
+        header p{font-size:1rem;margin-top:.75rem;opacity:.9;}
+        .profile-img{width:180px;height:180px;border-radius:50%;object-fit:cover;border:6px solid #fff;position:absolute;bottom:-90px;left:50%;transform:translateX(-50%);background:#fff;}
+        main{max-width:800px;margin:8rem auto 0;padding:0 1rem;}
+        section{margin-bottom:3rem;}
+        h2{font-size:1.5rem;border-left:6px solid var(--turf-green);padding-left:.75rem;margin-bottom:1rem;}
+        .sns{display:flex;gap:.75rem;margin-top:1rem;}
+        .sns a{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:var(--turf-green);color:#fff;text-decoration:none;transition:.2s;}
+        .sns a:hover{background:var(--turf-green-dark);}
+        .sns svg{width:24px;height:24px;fill:currentColor;}
+        #compliance{background:#fafafa;font-size:.75rem;color:#555;text-align:center;padding:2rem 1rem;margin-top:4rem;}
+        #compliance a{color:var(--turf-green-dark);text-decoration:none;}
+        #compliance a:hover{text-decoration:underline;}
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- ===================== PROFILE ===================== -->
-        <section class="profile-card">
-            <div class="profile-avatar" aria-hidden="true">🐎</div>
-            <h1 class="profile-name">うま恋日記</h1>
-            <p class="profile-description">
-                競馬のある週末が好きです。パドックでの一瞬の表情や、静かな直線の駆け引きに惹かれます。データも直感も大切に、気ままに予想や感想を綴ります。
-            </p>
-            <!-- Social media -->
-            <div class="social-links">
-                <a class="social-link" href="https://x.com/your_account" target="_blank" rel="noopener" aria-label="X (旧Twitter)">𝕏</a>
-                <!-- 追加したい場合はここにリンクを足す -->
-            </div>
-            <!-- Basic stats (static demo) -->
-            <div class="profile-stats">
-                <div class="stat-item"><span class="stat-number" id="total-links">0</span><span class="stat-label">リンク数</span></div>
-                <div class="stat-item"><span class="stat-number" id="total-views">0</span><span class="stat-label">総閲覧数</span></div>
+    <header>
+        <h1>うま恋日記</h1>
+        <p>芝の香りと情熱と—週末のレースを彩る大人のプロフィール</p>
+        <img src="profile.png" alt="プロフィール写真" class="profile-img">
+    </header>
+
+    <main>
+        <section id="about">
+            <h2>自己紹介</h2>
+            <p>競馬歴10年、パドックで馬の気性を読むのが得意。普段はITエンジニアとしてコードと戦いつつ、週末はターフで勝負。馬券は<br>ハイブリッド派。</p>
+            <div class="sns" aria-label="ソーシャルリンク">
+                <a href="https://x.com/USERNAME" target="_blank" rel="noopener noreferrer" aria-label="X(Twitter) プロフィール">
+                    <!-- Simple X logo SVG -->
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.98 10.7 23.4 0h-2.14l-7.55 9.13L7.83 0H0l8.82 13.06L0 24h2.14l7.97-9.63L16.17 24H24l-9.02-13.3Z"/></svg>
+                </a>
             </div>
         </section>
 
-        <!-- ===================== PREDICTIONS ===================== -->
-        <section class="predictions-section" id="predictions-section" aria-labelledby="predictions-heading">
-            <h2 id="predictions-heading" class="section-title">🏇 最新予想</h2>
-            <div id="predictions-container"><!-- JSで挿入 --></div>
+        <section id="recent">
+            <h2>最近の予想＆的中</h2>
+            <p>5/31 東京11R 目黒記念　◎ディープインパクト産駒で会心の万馬券！</p>
         </section>
-    </div>
 
-<script>
-/***** Read‑only App – no admin features *****/
-let predictionsData=[];
-let analyticsData={totalViews:0};
+        <section id="schedule">
+            <h2>今週注目のレース</h2>
+            <ul>
+                <li>6/7 (土) 東京10R 芝1800m – ◎ジャスタウェイ産駒に注目</li>
+                <li>6/8 (日) 阪神11R 芝1600m – 穴ならキズナ産駒</li>
+            </ul>
+        </section>
+    </main>
 
-function loadData(){
-    const savedPred=localStorage.getItem('horselinks_predictions');
-    const savedAnalytics=localStorage.getItem('horselinks_analytics');
-    if(savedPred){predictionsData=JSON.parse(savedPred);}else{addSamplePredictions();}
-    if(savedAnalytics){analyticsData={...analyticsData,...JSON.parse(savedAnalytics)}}
-}
-
-function saveAnalytics(){
-    localStorage.setItem('horselinks_analytics',JSON.stringify(analyticsData));
-}
-
-function addSamplePredictions(){
-    predictionsData=[{
-        id:1,
-        raceDate:'2025-06-06',
-        venue:'東京',
-        raceNumber:'11R',
-        raceName:'安田記念',
-        content:'本命 ⑬レジェンドストーム\n対抗 ⑰ワンダーエビル\n穴 ⑤グラスシューター',
-        createdAt:new Date().toISOString()
-    }];
-}
-
-function renderPredictions(){
-    const container=document.getElementById('predictions-container');
-    container.innerHTML='';
-    if(predictionsData.length===0){
-        container.innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:40px">まだ予想がありません。</p>';
-        return;
-    }
-    const sorted=[...predictionsData].sort((a,b)=>new Date(b.raceDate)-new Date(a.raceDate));
-    sorted.forEach(p=>{
-        const div=document.createElement('article');
-        div.className='prediction-card';
-        div.innerHTML=`<h3 class='race-title'>${p.raceName||p.venue+p.raceNumber}</h3>
-                       <div class='race-details'>${new Date(p.raceDate).toLocaleDateString('ja-JP')} / ${p.venue} ${p.raceNumber}</div>
-                       <div class='prediction-text'>${p.content}</div>`;
-        container.appendChild(div);
-    });
-}
-
-// Init
-loadData();
-renderPredictions();
-analyticsData.totalViews++;
-saveAnalytics();
-</script>
+    <footer id="compliance" role="contentinfo">
+        <p class="copyright">© 2025 うま恋日記&nbsp;All&nbsp;Rights&nbsp;Reserved.</p>
+        <p class="legal">当サイトは18歳未満の方の閲覧・利用を禁止しています。掲載コンテンツはフィクションであり、実在の人物・団体とは関係ありません。</p>
+        <p class="links"><a href="/terms.html">利用規約</a> | <a href="/privacy.html">プライバシーポリシー</a> | <a href="mailto:info@example.com">お問い合わせ</a></p>
+    </footer>
 </body>
 </html>
